@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Saira", sans-serif;
+  margin: 0;
+
+  background: linear-gradient(
+    145deg,
+    #a5a799 0%,
+    #eef0ec 30%,
+    #a8c8c3 60%,
+    #7aaebc 85%,
+    #61a3b8 100%
+  );
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
