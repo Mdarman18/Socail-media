@@ -2,13 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 dotenv.config();
-
 
 import passport from "passport";
 
 import connectDB from "./src/Connection/connect.js";
-import "./src/config/passport.js"; 
+import "./src/config/passport.js";
 
 import { userRouter } from "./src/Route/userRoute.js";
 import { otherRouter } from "./src/Route/otherRoute.js";
@@ -23,10 +23,12 @@ const app = express();
 
 app.use(cookieParser());
 app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
 );
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Connect DB
 connectDB();
@@ -36,11 +38,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 // ===========--------- Routes ---------==================
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.get("/", (req, res) => {
   res.send("Express Server is Running 🚀");
 });
