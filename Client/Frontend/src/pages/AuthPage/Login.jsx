@@ -1,6 +1,10 @@
 import { FaUser, FaLock } from "react-icons/fa";
 import SocialIcons from "./SocialIcons";
-import { clearLoginInput,  SetlogininInput } from "../../store/CreateSlice";
+import {
+  clearLoginInput,
+  loginSuccess,
+  SetlogininInput,
+} from "../../store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { authUrl } from "../../api/Axios";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +27,9 @@ const Login = () => {
       const res = await authUrl.post("/login", loginInputs);
       toast.success(res.data.message);
       dispatch(clearLoginInput());
+      dispatch(loginSuccess(res.data.user));
+      console.log(loginSuccess(res.data.user));
+
       navigte("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong!");

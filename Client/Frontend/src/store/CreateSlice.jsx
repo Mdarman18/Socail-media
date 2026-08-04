@@ -10,6 +10,8 @@ const initialState = {
     email: "",
     password: "",
   },
+  user: null,
+  isAuthenticated: false,
 };
 
 export const authSlice = createSlice({
@@ -40,6 +42,15 @@ export const authSlice = createSlice({
         password: "",
       };
     },
+    loginSuccess: (state, action) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+    },
+
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+    },
   },
 });
 
@@ -48,6 +59,8 @@ export const {
   clearLoginInput,
   SetSigninInput,
   clearSignInput,
+  loginSuccess,
+  logout,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,7 +1,11 @@
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import SocialIcons from "./SocialIcons";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSignInput, SetSigninInput } from "../../store/CreateSlice";
+import {
+  clearSignInput,
+  loginSuccess,
+  SetSigninInput,
+} from "../../store/CreateSlice";
 import { authUrl } from "../../api/Axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +34,9 @@ const Signup = () => {
       const res = await authUrl.post("/signin", signinInputs);
       dispatch(clearSignInput());
       toast.success(res.data.message);
+      dispatch(loginSuccess(res.data.user));
+      console.log(loginSuccess);
+
       navigte("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong!");
