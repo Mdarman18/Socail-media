@@ -35,8 +35,7 @@ const Signup = () => {
       dispatch(clearSignInput());
       toast.success(res.data.message);
       dispatch(loginSuccess(res.data.user));
-      console.log(loginSuccess);
-
+      dispatch(clearSignInput());
       navigte("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong!");

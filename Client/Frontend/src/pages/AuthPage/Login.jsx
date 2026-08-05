@@ -28,10 +28,11 @@ const Login = () => {
       toast.success(res.data.message);
       dispatch(clearLoginInput());
       dispatch(loginSuccess(res.data.user));
-      console.log(loginSuccess(res.data.user));
+    
 
       navigte("/");
     } catch (error) {
+      dispatch(clearLoginInput());
       toast.error(error.response?.data?.message || "Something went wrong!");
     }
   };

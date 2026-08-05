@@ -4,15 +4,22 @@ import Login from "../pages/AuthPage/Login";
 import Signup from "../pages/AuthPage/Signup";
 import AuthPage from "../pages/AuthPage/Auth";
 import Profile from "../pages/Profile";
+import Home from "../pages/Home";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    children: [{
-      path:"profile",
-      element:<Profile/>
-    }],
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+    ],
   },
   {
     path: "login",

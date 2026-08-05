@@ -35,6 +35,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    education: {
+      type: String,
+      default: "",
+    },
+    location: {
+      type: String,
+      default: "",
+    },
+    nickname: {
+      type: String,
+      default: "",
+    },
     img: {
       type: String,
       default: "",

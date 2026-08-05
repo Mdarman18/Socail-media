@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 import { FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   const [darkMode, setDarkMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -79,9 +80,10 @@ const Navbar = () => {
         {/* Profile & Dark Mode Section */}
         <div className="flex flex-col gap-3 mt-6">
           <div className="w-full rounded-2xl bg-white p-3 shadow-md">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 cursor-pointer">
               <img
-                // src=""
+                src={user?.img}
+                onClick={() => navigate("/profile")}
                 alt="Profile"
                 className="h-16 w-16 rounded-full object-cover border"
               />

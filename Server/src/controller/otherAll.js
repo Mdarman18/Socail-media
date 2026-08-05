@@ -29,7 +29,7 @@ export const getProfile = async (req, res) => {
 export const editProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { bio, gender } = req.body;
+    const { bio, gender, education, location, nickname } = req.body;
     const img = req.file;
     let cloudResponse;
 
@@ -38,8 +38,7 @@ export const editProfile = async (req, res) => {
 
       cloudResponse = await cloudinary.uploader.upload(file);
     }
-   
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -49,6 +48,9 @@ export const editProfile = async (req, res) => {
     }
     if (bio) user.bio = bio;
     if (gender) user.gender = gender;
+    if (education) user.education = education;
+    if (nickname) user.nickname = nickname;
+    if (location) user.location = location;
     if (cloudResponse) user.img = cloudResponse.secure_url;
     await user.save();
 
