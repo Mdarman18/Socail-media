@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBell, FaSearch, FaPlus } from "react-icons/fa";
 import { LuLogIn } from "react-icons/lu";
+import CreatePost from "./CreatePost";
 const Search = () => {
-  
+  const [isOpen, setIsopen] = useState(false);
 
   return (
     <div className="w-full sm:block hidden">
@@ -23,7 +24,10 @@ const Search = () => {
         {/* Right Action Section */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           {/* Create Post Button (Mobile: Plus Icon, Desktop: Text + Icon) */}
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <button
+            onClick={() => setIsopen(!isOpen)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap"
+          >
             <FaPlus className="text-xs sm:text-sm" />
             <span className="hidden sm:inline">Create Post</span>
           </button>
@@ -44,6 +48,7 @@ const Search = () => {
           </div>
         </div>
       </nav>
+      <CreatePost isOpen={isOpen} setIsopen={setIsopen} />
     </div>
   );
 };

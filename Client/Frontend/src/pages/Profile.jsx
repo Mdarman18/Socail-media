@@ -17,6 +17,8 @@ import EditProfile from "../components/EditProfile";
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
   const [edit, setEdit] = useState(false);
+
+
   return (
     <div className="w-full min-h-screen p-4 sm:p-6 bg-slate-50 flex flex-col gap-4">
       {/* 1. Header Container */}

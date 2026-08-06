@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+// Auth State
+const initialAuthState = {
   loginInput: {
     email: "",
     password: "",
@@ -12,11 +13,14 @@ const initialState = {
   },
   user: null,
   isAuthenticated: false,
+  loading: false,
+  error: null,
 };
 
+// Auth Slice
 export const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: initialAuthState,
   reducers: {
     SetlogininInput: (state, action) => {
       const { field, value } = action.payload;
@@ -63,4 +67,36 @@ export const {
   logout,
 } = authSlice.actions;
 
-export default authSlice.reducer;
+export const authReducer = authSlice.reducer;
+
+// Post State
+const initialPostState = {
+  userPosts: [],
+  loading: false,
+  error: null,
+};
+
+// Post Slice
+export const postSlice = createSlice({
+  name: "post",
+  initialState: initialPostState,
+  reducers: {
+    setPosts: (state, action) => {
+      state.userPosts = action.payload;
+    },
+
+    addPost: (state, action) => {
+      state.userPosts.unshift(action.payload);
+    },
+
+    deletePost: (state, action) => {
+      state.userPosts = state.userPosts.filter(
+        (post) => post._id !== action.payload,
+      );
+    },
+  },
+});
+
+export const { setPosts, addPost, deletePost } = postSlice.actions;
+
+export const postReducer = postSlice.reducer;

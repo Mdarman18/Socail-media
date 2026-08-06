@@ -4,21 +4,21 @@ import { FaCamera } from "react-icons/fa";
 import { educationData } from "../data/data";
 import { profileUrl } from "../api/Axios";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../store/CreateSlice";
 
 export default function EditProfile({ edit, setEdit }) {
   const dispatch = useDispatch();
-
+  const user = useSelector((state) => state.auth.user);
   const [image, setImage] = useState(null);
 
-  const [imagePreview, setImagePreview] = useState("/profile.jpg");
+  const [imagePreview, setImagePreview] = useState(user?.img || "");
 
   const [formData, setFormData] = useState({
-    nickname: "",
-    bio: "",
-    location: "",
-    education: "",
+    nickname: user?.nickname || "",
+    bio: user?.bio || "",
+    location: user?.location || "",
+    education: user?.education || "",
   });
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function EditProfile({ edit, setEdit }) {
       const res = await profileUrl.post("/edit", data);
       toast.success(res.data.message);
       dispatch(loginSuccess(res.data.user));
-      console.log(res.data.user);
+   
       setEdit(false);
     } catch (error) {
       console.log(error);

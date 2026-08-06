@@ -9,12 +9,13 @@ import {
 import { authUrl } from "../../api/Axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Signup = () => {
-  const navigte = useNavigate();
-  // ===== Redux Setup --------==========
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Fix 1: State path ko sahi kiya -> state.auth.SigninInput
   const signinInputs = useSelector((state) => state.auth.SigninInput);
 
   const handleChange = (e) => {
@@ -26,21 +27,24 @@ const Signup = () => {
     );
   };
 
-  // ========---- Request send to backend -----================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await authUrl.post("/signin", signinInputs);
-      dispatch(clearSignInput());
       toast.success(res.data.message);
       dispatch(loginSuccess(res.data.user));
       dispatch(clearSignInput());
-      navigte("/");
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong!");
     }
   };
+
+  // Fix 2: Galat action dispatch hata kar page mount hone par inputs clear kiye
+  useEffect(() => {
+    dispatch(clearSignInput());
+  }, [dispatch]);
 
   return (
     <div className="w-full h-full flex flex-col justify-center px-8 sm:px-14">
@@ -54,7 +58,7 @@ const Signup = () => {
             type="text"
             placeholder="e.g. arman123"
             name="username"
-            value={signinInputs.username}
+            value={signinInputs?.username || ""}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />
@@ -66,7 +70,7 @@ const Signup = () => {
             type="email"
             placeholder="name@example.com"
             name="email"
-            value={signinInputs.email}
+            value={signinInputs?.email || ""}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />
@@ -78,7 +82,7 @@ const Signup = () => {
             type="password"
             placeholder="e.g. MyPass123"
             name="password"
-            value={signinInputs.password}
+            value={signinInputs?.password || ""}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />

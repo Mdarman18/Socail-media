@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authUrl } from "../../api/Axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Login = () => {
   const navigte = useNavigate();
@@ -28,7 +29,6 @@ const Login = () => {
       toast.success(res.data.message);
       dispatch(clearLoginInput());
       dispatch(loginSuccess(res.data.user));
-    
 
       navigte("/");
     } catch (error) {
@@ -36,6 +36,9 @@ const Login = () => {
       toast.error(error.response?.data?.message || "Something went wrong!");
     }
   };
+  useEffect(() => {
+    dispatch(clearLoginInput());
+  }, []);
   return (
     <div className="w-full h-full flex flex-col justify-center px-8 sm:px-14">
       <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">

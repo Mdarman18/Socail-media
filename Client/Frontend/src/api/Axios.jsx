@@ -7,3 +7,8 @@ export const profileUrl = axios.create({
   baseURL: "http://localhost:4400/api/profile",
   withCredentials: true,
 });
+
+export const postUrl = axios.create({
+  baseURL: "http://localhost:4400/api/post",
+  withCredentials: true,
+});

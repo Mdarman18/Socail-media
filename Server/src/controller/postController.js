@@ -9,7 +9,7 @@ export const addPost = async (req, res) => {
     const id = req.user.id;
     const img = req.file;
     const { caption } = req.body;
-    
+
     // 1. Validation: File check
     if (!img) {
       return res.status(400).json({
@@ -28,22 +28,36 @@ export const addPost = async (req, res) => {
     }
 
     // 3. Image Optimization with Sharp
-    const optimizedBuffer = await sharp(img.buffer)
-      .resize({
-        width: 800,
-        height: 800,
-        fit: "inside",
-      })
-      .toFormat("jpeg", { quality: 80 })
-      .toBuffer();
+    let pdfUrl = "";
+    let imgUrl = "";
+    const type = img.mimetype;
+    if (type === "application/pdf") {
+      const fileUri = `data:application/pdf;base64,${img.buffer.toString("base64")}`;
 
-    // 4. Base64 conversion (Fixed 'image/jpeg')
-    const fileUri = `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`;
-    const cloudResponse = await cloudinary.uploader.upload(fileUri);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri, {
+        resource_type: "raw", // PDF ke liye raw best hai
+      });
+      pdfUrl = cloudResponse.secure_url;
+    } else {
+      const optimizedBuffer = await sharp(img.buffer)
+        .resize({
+          width: 800,
+          height: 800,
+          fit: "inside",
+        })
+        .toFormat("jpeg", { quality: 80 })
+        .toBuffer();
+
+      // 4. Base64 conversion (Fixed 'image/jpeg')
+      const fileUri = `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`;
+      const cloudResponse = await cloudinary.uploader.upload(fileUri);
+      imgUrl = cloudResponse.secure_url;
+    }
     // 5. Database me Post Create karna
     const post = await Post.create({
       caption,
-      img: cloudResponse.secure_url,
+      img: imgUrl,
+      pdf: pdfUrl,
       author: id,
     });
 
@@ -51,12 +65,13 @@ export const addPost = async (req, res) => {
     user.post.push(post._id);
     await user.save();
     await post.populate("author", "-password");
-
+    console.log(cloudResponse);
     // 6. Successful Response Send karna
     return res.status(201).json({
       success: true,
       message: "Post created successfully!",
       post,
+      user,
     });
   } catch (error) {
     return res.status(500).json({
@@ -70,13 +85,13 @@ export const getUserProfile = async (req, res) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .populate({ path: "author", select: "username,img" })
+      .populate({ path: "author", select: "username img" })
       .populate({
         path: "comment",
         sort: { createdAt: -1 },
         populate: {
           path: "author",
-          select: "username,img",
+          select: "username img",
         },
       });
 

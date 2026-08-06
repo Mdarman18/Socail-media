@@ -7,7 +7,9 @@ const postSchema = new mongoose.Schema(
     },
     img: {
       type: String,
-      required: true,
+    },
+    pdf: {
+      type: String,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
