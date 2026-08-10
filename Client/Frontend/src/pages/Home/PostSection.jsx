@@ -12,12 +12,14 @@ import { animate, motion } from "framer-motion";
 import { postUrl } from "../../api/Axios";
 import { likePost, setPosts } from "../../store/CreateSlice";
 import { useNavigate } from "react-router-dom";
+import Comment from "./Comment";
 
 export const PostSection = () => {
   const navigate = useNavigate();
   const userPosts = useSelector((state) => state.post?.userPosts) || [];
   const dispatch = useDispatch();
   const [like, setLike] = useState(false);
+  const [id, setId] = useState();
   const user = useSelector((state) => state.auth.user);
   // ====------Handle like and unlike button --=======================
   const handleLikeButton = async (id) => {
@@ -40,7 +42,11 @@ export const PostSection = () => {
       console.log(error);
     }
   };
-
+  // ========-------Handle Comment ----==================
+  const handleComment = (id) => {
+    setShowComments(!showComments);
+    setId(id);
+  };
   const getPost = async () => {
     const res = await postUrl.get("/allpost");
     dispatch(setPosts(res.data.posts));
@@ -163,7 +169,9 @@ export const PostSection = () => {
                         />
                       </motion.button>
                       <button
-                        onClick={() => setShowComments((prev) => !prev)}
+                        onClick={() => {
+                          handleComment(ele._id);
+                        }}
                         className="p-1 text-gray-700 transition-colors duration-200 hover:text-indigo-500 dark:text-gray-300"
                       >
                         <FiMessageCircle className="h-6 w-6" />
@@ -194,6 +202,11 @@ export const PostSection = () => {
             hlo
           </div>
         </aside>
+        <Comment
+          showComments={showComments}
+          setShowComments={setShowComments}
+          id={id}
+        />
       </section>
     </>
   );

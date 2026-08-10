@@ -18,9 +18,7 @@ import auth from "./src/utlis/verifyUser.js";
 import authRoute from "./src/Route/googleAuth.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import { specs } from "./src/config/swagger.js";
-
-const app = express();
-
+import { app, server } from "./src/socket/socekt.js";
 app.use(cookieParser());
 app.use(
   cors({
@@ -54,6 +52,6 @@ app.use("/auth", authRoute);
 // Start Server
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running On http://localhost:${PORT}`);
 });

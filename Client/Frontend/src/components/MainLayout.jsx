@@ -6,16 +6,14 @@ import Search from "./Search";
 export default function MainLayout() {
   return (
     <>
-      <div className="flex flex-col sm:flex-row min-h-screen">
-
+      <div className="flex min-h-screen">
         <Navbar />
 
-        <main className="flex-1 ">
-          <Search/>
+        <main className="flex-1">
+          <Search />
           <Outlet />
         </main>
       </div>
-
       <Footer />
     </>
   );

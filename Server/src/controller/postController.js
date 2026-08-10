@@ -219,6 +219,7 @@ export const addComment = async (req, res) => {
     const userId = req.user.id;
     const postId = req.params.id;
     const { text } = req.body;
+    console.log(text);
 
     // Check comment text
     if (!text || text.trim() === "") {
@@ -276,30 +277,24 @@ export const getComment = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const comment = await Comment.find({ post: postId }).populate({
-      path: "author",
-      select: "username img",
-    });
-
-    if (!comment) {
-      return res.status(404).json({
-        success: false,
-        message: "Comment not found",
+    const comments = await Comment.find({ post: postId })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "author",
+        select: "username img",
       });
-    }
 
     return res.status(200).json({
       success: true,
-      comment,
+      comments,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Internal Server Error",
     });
   }
 };
-
 // ========-----------Delete a post --------==============
 export const DeletePost = async (req, res) => {
   try {

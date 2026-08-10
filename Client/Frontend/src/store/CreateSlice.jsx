@@ -124,10 +124,36 @@ const profileSlice = createSlice({
     setUserProfile: (state, action) => {
       state.userProfile = action.payload;
     },
-   
+  },
+});
+// =========----------  for comment ------===========
+export const commentReducers = createSlice({
+  name: "comment",
+
+  initialState: {
+    usercomment: [],
+    text: "",
+  },
+
+  reducers: {
+    setuserComment: (state, action) => {
+      state.usercomment = action.payload;
+    },
+
+    addComment: (state, action) => {
+      state.usercomment.push(action.payload);
+    },
+
+    clearComment: (state) => {
+      state.usercomment = [];
+    },
   },
 });
 
+export const { setuserComment, addComment, clearComment } =
+  commentReducers.actions;
+
+export const commentReducer = commentReducers.reducer;
 // export const { setUserProfile, updateFollowStatus } = profileSlice.actions;
-export const { setUserProfile} = profileSlice.actions;
+export const { setUserProfile } = profileSlice.actions;
 export const profileReducers = profileSlice.reducer;
