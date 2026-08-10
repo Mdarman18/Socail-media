@@ -14,7 +14,6 @@ import {
 
 export const postRoute = express.Router();
 
-
 /**
  * @swagger
  * /api/post/addpost:
@@ -45,7 +44,6 @@ export const postRoute = express.Router();
  */
 postRoute.post("/addpost", upload.single("img"), addPost);
 
-
 /**
  * @swagger
  * /api/post/allpost:
@@ -58,7 +56,6 @@ postRoute.post("/addpost", upload.single("img"), addPost);
  *         description: All posts fetched successfully
  */
 postRoute.get("/allpost", getUserProfile);
-
 
 /**
  * @swagger
@@ -74,7 +71,6 @@ postRoute.get("/allpost", getUserProfile);
  *         description: User posts fetched successfully
  */
 postRoute.get("/getuserpost", getUserKapost);
-
 
 /**
  * @swagger
@@ -97,13 +93,11 @@ postRoute.get("/getuserpost", getUserKapost);
  *         description: Post liked successfully
  */
 postRoute.post("/like/:id", Like);
-
-
 /**
  * @swagger
  * /api/post/dislike/{id}:
  *   post:
- *     summary: Unlike a post
+ *     summary: DisLike a post
  *     tags:
  *       - Post
  *     security:
@@ -117,11 +111,9 @@ postRoute.post("/like/:id", Like);
  *           example: 6890d3e9c4a12b4e7f12345
  *     responses:
  *       200:
- *         description: Post unliked successfully
+ *         description: Post liked successfully
  */
 postRoute.post("/dislike/:id", Dislike);
-
-
 /**
  * @swagger
  * /api/post/addcomment/{id}:
@@ -154,7 +146,6 @@ postRoute.post("/dislike/:id", Dislike);
  */
 postRoute.post("/addcomment/:id", addComment);
 
-
 /**
  * @swagger
  * /api/post/getcomment/{id}:
@@ -174,7 +165,6 @@ postRoute.post("/addcomment/:id", addComment);
  *         description: Comments fetched successfully
  */
 postRoute.get("/getcomment/:id", getComment);
-
 
 /**
  * @swagger
@@ -197,7 +187,6 @@ postRoute.get("/getcomment/:id", getComment);
  *         description: Post deleted successfully
  */
 postRoute.delete("/deletepost/:id", DeletePost);
-
 
 /**
  * @swagger

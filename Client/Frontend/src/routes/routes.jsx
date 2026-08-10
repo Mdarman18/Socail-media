@@ -5,6 +5,7 @@ import Signup from "../pages/AuthPage/Signup";
 import AuthPage from "../pages/AuthPage/Auth";
 import Profile from "../pages/Profile";
 import Home from "../pages/Home/Home";
+import UserProfile from "../pages/UserProfile";
 
 export const routes = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const routes = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "userProfile/:id",
+        element: <UserProfile />,
       },
     ],
   },

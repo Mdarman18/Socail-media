@@ -58,7 +58,11 @@ const CreatePost = ({ isOpen, setIsopen }) => {
       const formData = new FormData();
       formData.append("img", file);
       formData.append("caption", caption);
-      const res = await postUrl.post("/addpost", formData);
+      const res = await postUrl.post("/addpost", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success(res.data.messsage);
       setFile(null);
       setPreview(null);

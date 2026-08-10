@@ -32,11 +32,16 @@ export const addPost = async (req, res) => {
     let imgUrl = "";
     const type = img.mimetype;
     if (type === "application/pdf") {
-      const fileUri = `data:application/pdf;base64,${img.buffer.toString("base64")}`;
+      const fileUri = `data:application/pdf;base64,${img.buffer.toString(
+        "base64",
+      )}`;
 
       const cloudResponse = await cloudinary.uploader.upload(fileUri, {
-        resource_type: "raw", // PDF ke liye raw best hai
+        resource_type: "raw",
+        folder: "posts/pdfs",
+        public_id: `${Date.now()}-${img.originalname.replace(/\.pdf$/i, "")}.pdf`,
       });
+
       pdfUrl = cloudResponse.secure_url;
     } else {
       const optimizedBuffer = await sharp(img.buffer)
@@ -53,6 +58,7 @@ export const addPost = async (req, res) => {
       const cloudResponse = await cloudinary.uploader.upload(fileUri);
       imgUrl = cloudResponse.secure_url;
     }
+
     // 5. Database me Post Create karna
     const post = await Post.create({
       caption,
@@ -65,7 +71,7 @@ export const addPost = async (req, res) => {
     user.post.push(post._id);
     await user.save();
     await post.populate("author", "-password");
-    console.log(cloudResponse);
+
     // 6. Successful Response Send karna
     return res.status(201).json({
       success: true,
@@ -137,25 +143,33 @@ export const getUserKapost = async (req, res) => {
 // =========----Like Controller ------============
 export const Like = async (req, res) => {
   try {
-    const likeKarneWalakiId = req.user.id;
-    const KisPostKoLikeKaraRahaHain = req.params.id;
+    const userId = req.user.id;
+    const postId = req.params.id;
 
-    const post = await Post.findById(KisPostKoLikeKaraRahaHain);
-    if (!post) {
-      return res.status(402).json({
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $addToSet: {
+          likes: userId,
+        },
+      },
+      {
+        returnDocument: "after",
+      },
+    ).populate("author", "username img");
+
+    if (!updatedPost) {
+      return res.status(404).json({
         success: false,
         message: "Post not found...",
       });
     }
 
-    await post.updateOne({ $addToSet: { likes: likeKarneWalakiId } });
-    await post.save();
-
     return res.status(200).json({
       success: true,
-      message: "Post Like successfully",
+      message: "Post liked successfully",
+      post: updatedPost,
     });
-    //  ======-- Notification System -----=========
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -166,25 +180,31 @@ export const Like = async (req, res) => {
 
 export const Dislike = async (req, res) => {
   try {
-    const likeKarneWalakiId = req.user.id;
-    const KisPostKoLikeKaraRahaHain = req.params.id;
+    const userId = req.user.id;
+    const postId = req.params.id;
 
-    const post = await Post.findById(KisPostKoLikeKaraRahaHain);
-    if (!post) {
-      return res.status(402).json({
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: {
+          likes: userId,
+        },
+      },
+      { returnDocument: "after" },
+    ).populate("author", "username img");
+
+    if (!updatedPost) {
+      return res.status(404).json({
         success: false,
         message: "Post not found...",
       });
     }
 
-    await post.updateOne({ $pull: { likes: likeKarneWalakiId } });
-    await post.save();
-
     return res.status(200).json({
       success: true,
-      message: "Post UnLike successfully",
+      message: "Post unliked successfully",
+      post: updatedPost,
     });
-    //  ======-- Notification System -----=========
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -192,7 +212,6 @@ export const Dislike = async (req, res) => {
     });
   }
 };
-
 // =======-------Add Comment ----==========
 
 export const addComment = async (req, res) => {

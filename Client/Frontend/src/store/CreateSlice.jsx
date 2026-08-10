@@ -50,7 +50,6 @@ export const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
-
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -64,6 +63,7 @@ export const {
   SetSigninInput,
   clearSignInput,
   loginSuccess,
+
   logout,
 } = authSlice.actions;
 
@@ -88,7 +88,17 @@ export const postSlice = createSlice({
     addPost: (state, action) => {
       state.userPosts.unshift(action.payload);
     },
+    likePost: (state, action) => {
+      const updatedPost = action.payload;
 
+      const index = state.userPosts.findIndex(
+        (post) => post._id === updatedPost._id,
+      );
+
+      if (index !== -1) {
+        state.userPosts[index] = updatedPost;
+      }
+    },
     deletePost: (state, action) => {
       state.userPosts = state.userPosts.filter(
         (post) => post._id !== action.payload,
@@ -97,6 +107,27 @@ export const postSlice = createSlice({
   },
 });
 
-export const { setPosts, addPost, deletePost } = postSlice.actions;
+export const { setPosts, addPost, deletePost, likePost } = postSlice.actions;
 
 export const postReducer = postSlice.reducer;
+const initialProfileState = {
+  userProfile: [],
+  isFollowing: false,
+  follow: true,
+};
+
+const profileSlice = createSlice({
+  name: "profile",
+  initialState: initialProfileState,
+
+  reducers: {
+    setUserProfile: (state, action) => {
+      state.userProfile = action.payload;
+    },
+   
+  },
+});
+
+// export const { setUserProfile, updateFollowStatus } = profileSlice.actions;
+export const { setUserProfile} = profileSlice.actions;
+export const profileReducers = profileSlice.reducer;

@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { authReducer, postReducer } from "./CreateSlice";
+import { authReducer, postReducer, profileReducers } from "./CreateSlice";
 import storageModule from "redux-persist/lib/storage";
 
 const storage = storageModule.default || storageModule;
@@ -11,6 +11,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   post: postReducer,
+  profile: profileReducers,
 });
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);
