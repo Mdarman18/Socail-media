@@ -1,4 +1,4 @@
-import { User } from "../models/user.js";
+import { User } from "../Models/user.js";
 import cloudinary from "../utlis/cloud.js";
 import getDataUri from "../utlis/dataUri.js";
 

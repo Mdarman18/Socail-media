@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.js";
+import { User } from "../Models/user.js";
 console.log(process.env.JWT_SECRET);
 
 // ===================== SIGNUP =====================
@@ -8,7 +8,7 @@ export const handleSignup = async (req, res) => {
   try {
     const { username, email, password, gender } = req.body;
 
-    if (!username || !email || !password ) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -99,7 +99,6 @@ export const handleLogin = async (req, res) => {
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  
 
     res.status(200).json({
       success: true,

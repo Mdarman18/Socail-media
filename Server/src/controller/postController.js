@@ -1,6 +1,6 @@
-import { Comment } from "../models/commentSchema.js";
-import { Post } from "../models/postSchema.js";
-import { User } from "../models/user.js";
+import { Comment } from "../Models/commentSchema.js";
+import { Post } from "../Models/postSchema.js";
+import { User } from "../Models/user.js";
 import cloudinary from "../utlis/cloud.js"; // Typo check: utlis -> utils
 import sharp from "sharp";
 

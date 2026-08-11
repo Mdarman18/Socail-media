@@ -1,5 +1,5 @@
-import Conversation from "../models/conversationMessage.js";
-import { Message } from "../models/message.js";
+import Conversation from "../Models/conversationMessage.js";
+import { Message } from "../Models/message.js";
 import { io, userSockets } from "../socket/socekt.js"; // 👈 Sirf socket file ka path (agar spelling 'socekt.js' hai toh wahi rakhein)
 
 export const conversation = async (req, res) => {
