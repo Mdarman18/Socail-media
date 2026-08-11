@@ -5,17 +5,17 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 dotenv.config();
 
-import passport from "passport";
+// import passport from "passport";
 
 import connectDB from "./src/Connection/connect.js";
-import "./src/config/passport.js";
+// import "./src/config/passport.js";
 
 import { userRouter } from "./src/Route/userRoute.js";
 import { otherRouter } from "./src/Route/otherRoute.js";
 import { postRoute } from "./src/Route/postRoute.js";
 import { messageRoute } from "./src/Route/messageRoute.js";
 import auth from "./src/utlis/verifyUser.js";
-import authRoute from "./src/Route/googleAuth.js";
+// import authRoute from "./src/Route/googleAuth.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import { specs } from "./src/config/swagger.js";
 import { app, server } from "./src/socket/socekt.js";
@@ -33,7 +33,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(passport.initialize());
+// app.use(passport.initialize());
 
 // ===========--------- Routes ---------==================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
@@ -47,7 +47,7 @@ app.use("/api/post", auth, postRoute);
 app.use("/api/message", auth, messageRoute);
 
 // Google Auth Routes
-app.use("/auth", authRoute);
+// app.use("/auth", authRoute);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
