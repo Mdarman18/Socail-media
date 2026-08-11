@@ -12,3 +12,8 @@ export const postUrl = axios.create({
   baseURL: "http://localhost:4400/api/post",
   withCredentials: true,
 });
+
+export const messageUrl = axios.create({
+  baseURL: "http://localhost:4400/api/message",
+  withCredentials: true,
+});

@@ -17,6 +17,7 @@ const storage = storageModule.default || storageModule;
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: ["message"],
 };
 
 const rootReducer = combineReducers({

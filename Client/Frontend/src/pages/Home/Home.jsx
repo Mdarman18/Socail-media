@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PostSection } from "./PostSection";
+import { persistor } from "../../store/store";
+import { useDispatch } from "react-redux";
 
 const Home = () => {
   // Dummy stories data — baad mein API se aayega
+  const dispatch = useDispatch();
   const stories = [
     { id: 1, name: "Your Story", isOwn: true },
     { id: 2, name: "Rahul", avatar: "" },
@@ -10,7 +13,16 @@ const Home = () => {
     { id: 4, name: "Aman", avatar: "" },
     { id: 5, name: "Simran", avatar: "" },
   ];
+  useEffect(() => {
+    const clearEverything = async () => {
+      dispatch({ type: "RESET_STORE" });
+      await persistor.purge();
 
+      console.log("✅ Everything cleared");
+    };
+
+    clearEverything();
+  }, []);
   return (
     <div className="min-h-screen w-full p-4 ">
       <div className="mx-auto w-full max-w-full px-3 sm:px-4 md:px-0">

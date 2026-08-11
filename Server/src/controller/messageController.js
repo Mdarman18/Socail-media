@@ -1,5 +1,6 @@
 import Conversation from "../models/conversationMessage.js";
 import { Message } from "../models/message.js";
+import { io, userSockets } from "../socket/socekt.js"; // 👈 Sirf socket file ka path (agar spelling 'socekt.js' hai toh wahi rakhein)
 
 export const conversation = async (req, res) => {
   try {
@@ -28,6 +29,11 @@ export const conversation = async (req, res) => {
     conversation.messages.push(newMessage._id);
     await conversation.save();
 
+    const receiverSocketId = userSockets[receiverId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
+
     return res.status(201).json({
       success: true,
       newMessage,
@@ -40,20 +46,17 @@ export const conversation = async (req, res) => {
   }
 };
 
-// ======-----get a message ---===========
 export const getMessage = async (req, res) => {
   try {
     const userId = req.user.id;
     const receiverId = req.params.id;
 
-    // Conversation dhundo
     const conversation = await Conversation.findOne({
       participants: {
         $all: [userId, receiverId],
       },
     }).populate("messages");
 
-    // Agar conversation hi nahi hai
     if (!conversation) {
       return res.status(200).json({
         success: true,
@@ -61,7 +64,6 @@ export const getMessage = async (req, res) => {
       });
     }
 
-    // Conversation ke saare messages bhej do
     return res.status(200).json({
       success: true,
       messages: conversation.messages,

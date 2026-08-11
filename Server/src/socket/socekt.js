@@ -12,7 +12,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-const userSockets = {}; //===---this map stores socket id corresponding the userId :-- UserId
+export const userSockets = {}; //===---this map stores socket id corresponding the userId :-- UserId
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) {
