@@ -22,7 +22,7 @@ import axios from "axios";
 
 const API_URL = "https://socail-media-4.onrender.com";
 
-export const userUrl = axios.create({
+export const authUrl = axios.create({
   baseURL: `${API_URL}/api/user`,
   withCredentials: true,
 });
