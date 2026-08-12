@@ -9,35 +9,48 @@ import UserProfile from "../pages/UserProfile";
 import Message from "../pages/Message";
 import Demo from "../pages/Home/demo";
 import Comment from "../pages/Home/Comment";
+import Land from "../pages/landingPage/Land";
+import ProtectedRoute from "./Protectedroute";
 export const routes = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "userProfile/:id",
-        element: <UserProfile />,
-      },
-      {
-        path: "messages",
-        element: <Message />,
-      },
-      {
-        path: "demo",
-        element: <Demo />,
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "userProfile/:id",
+            element: <UserProfile />,
+          },
+          {
+            path: "messages",
+            element: <Message />,
+          },
+          {
+            path: "demo",
+            element: <Demo />,
+          },
+        ],
       },
     ],
   },
+
   {
-    path: "login",
+    path: "/login",
     element: <AuthPage />,
+  },
+
+  {
+    path: "/overview/study",
+    element: <Land />,
   },
 ]);

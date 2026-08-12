@@ -100,3 +100,8 @@ export const educationData = [
   { id: 37, degree: "M.Tech (CSE - Computer Science)" },
   { id: 38, degree: "M.Tech (AI & Data Science)" },
 ];
+import pic1 from "../assets/myself3.jpeg";
+import pic2 from "../assets/saiyad.PNG";
+import pic3 from "../assets/firdoush.PNG";
+import pic4 from "../assets/nasir.PNG";
+export const images = [pic1, pic2, pic3, pic4];

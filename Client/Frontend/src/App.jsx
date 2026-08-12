@@ -1,9 +1,11 @@
 import React from "react";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast"; // Agar toast notifications use kar rahe hain
 import { routes } from "./routes/routes";
+import { useSelector } from "react-redux";
 
 const App = () => {
+ 
   return (
     <>
       <RouterProvider router={routes} />
