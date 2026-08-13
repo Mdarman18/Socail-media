@@ -30,8 +30,6 @@ const Comment = ({ showComments, setShowComments, id }) => {
 
         dispatch(setuserComment(res.data.comments || []));
       } catch (error) {
-        console.log("Get comments error:", error);
-
         toast.error(error.response?.data?.message || "Failed to load comments");
       }
     };

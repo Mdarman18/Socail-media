@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RouterProvider, useNavigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast"; // Agar toast notifications use kar rahe hain
+import toast, { Toaster } from "react-hot-toast"; // Agar toast notifications use kar rahe hain
 import { routes } from "./routes/routes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./store/CreateSlice";
+import axios from "axios";
 
 const App = () => {
- 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get("http://localhost:4400/me", {
+          withCredentials: true,
+        });
+        console.log("sucessss");
+      } catch (error) {
+        if (error.response?.status === 401) {
+          dispatch(logout());
+        }
+      }
+    };
+
+    checkAuth();
+  }, [dispatch]);
   return (
     <>
       <RouterProvider router={routes} />

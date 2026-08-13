@@ -4,14 +4,12 @@ import { FiStar, FiArrowRight } from "react-icons/fi";
 import heroImage from "../../assets/logo.png";
 import usedLogo from "../../assets/usedlogo.png";
 import { images } from "../../data/data";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative overflow-hidden">
-      {/* background gradient blobs */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl -z-10" />
-      <div className="absolute top-40 -right-20 w-80 h-80 bg-purple-200/40 rounded-full blur-3xl -z-10" />
-
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-4 px-4 sm:px-8 lg:px-16 mt-6 md:py-16">
         {/* Left part - text content */}
         <motion.div
@@ -44,7 +42,10 @@ const Main = () => {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto pt-2">
-            <button className="group px-6 py-3 cursor-pointer rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200 flex items-center justify-center gap-2">
+            <button
+              onClick={() => navigate("/login")}
+              className="group px-6 py-3 cursor-pointer rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200 flex items-center justify-center gap-2"
+            >
               Get Started
               <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>
@@ -106,6 +107,7 @@ const Main = () => {
           </div>
         </motion.div>
       </div>
+      <div className="w-full border-t border-gray-200 dark:border-gray-700 my-4"></div>
     </div>
   );
 };

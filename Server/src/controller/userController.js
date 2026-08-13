@@ -32,7 +32,7 @@ export const handleSignup = async (req, res) => {
       email,
       password: hashedPassword,
       gender,
-    });
+    }).select("-password");
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -48,7 +48,7 @@ export const handleSignup = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
     res.status(201).json({
       success: true,
@@ -97,7 +97,9 @@ export const handleLogin = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
+    // Remove password before sending response
+    const userData = user.toObject();
+    delete userData.password;
     // res.cookie("token", token, {
     //   httpOnly: true,
     //   secure: false, // true in production
@@ -108,12 +110,13 @@ export const handleLogin = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
+
     res.status(200).json({
       success: true,
       message: "Login successful",
-      user,
+      user: userData,
     });
   } catch (error) {
     res.status(500).json({

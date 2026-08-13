@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiHome, FiCompass, FiInfo, FiX } from "react-icons/fi";
 import studySharpImage from "../../assets/logo.png";
 import Main from "./Main";
+import Features from "./Features";
+import Footer from "../../components/Footer";
 
 const Land = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -123,6 +125,8 @@ const Land = () => {
         </div>
       )}
       <Main />
+      <Features />
+      <Footer />
     </div>
   );
 };

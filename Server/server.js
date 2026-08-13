@@ -45,7 +45,12 @@ app.use("/api/user", userRouter);
 app.use("/api/profile", auth, otherRouter);
 app.use("/api/post", auth, postRoute);
 app.use("/api/message", auth, messageRoute);
-
+app.get("/me", auth, (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+});
 // Google Auth Routes
 // app.use("/auth", authRoute);
 

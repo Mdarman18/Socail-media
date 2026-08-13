@@ -11,6 +11,8 @@ import Demo from "../pages/Home/demo";
 import Comment from "../pages/Home/Comment";
 import Land from "../pages/landingPage/Land";
 import ProtectedRoute from "./Protectedroute";
+import GuestRoutes from "./Guestroutes";
+import Features from "../pages/landingPage/Features";
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -43,14 +45,19 @@ export const routes = createBrowserRouter([
       },
     ],
   },
-
   {
-    path: "/login",
-    element: <AuthPage />,
-  },
-
-  {
-    path: "/overview/study",
-    element: <Land />,
+    path: "/",
+    element: <GuestRoutes />,
+    children: [
+      {
+        path: "login",
+        element: <AuthPage />,
+      },
+      {
+        path: "overview/study",
+        element: <Land />,
+      },
+    
+    ],
   },
 ]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavbarData } from "../data/data";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
+
   const [darkMode, setDarkMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();

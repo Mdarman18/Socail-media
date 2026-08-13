@@ -105,3 +105,63 @@ import pic2 from "../assets/saiyad.PNG";
 import pic3 from "../assets/firdoush.PNG";
 import pic4 from "../assets/nasir.PNG";
 export const images = [pic1, pic2, pic3, pic4];
+import doubt from "../assets/doubt.png";
+import { FiMessageCircle } from "react-icons/fi";
+import { BsFillPatchQuestionFill } from "react-icons/bs";
+import answer from "../assets/arman.png";
+import message from "../assets/message.png";
+// ========----------features section =========
+export const featurePage = [
+  {
+    logo: BsFillPatchQuestionFill,
+    text: "Ask Doubt",
+    para: "Ask your doubts and get clear explanations easily.",
+    img: doubt,
+
+    iconBg: "bg-blue-500",
+    iconColor: "text-white",
+    cardBg: "bg-blue-950/40",
+  },
+
+  {
+    logo: FaUser,
+    text: "Solve Doubt",
+    para: "Get accurate and easy-to-understand solutions.",
+    img: answer,
+
+    iconBg: "bg-green-500",
+    iconColor: "text-white",
+    cardBg: "bg-green-950/40",
+  },
+  {
+    logo: FiMessageCircle,
+    text: "Message",
+    para: "Connect and communicate with other learners.",
+    img: message,
+
+    iconBg: "bg-red-400",
+    iconColor: "text-white",
+    cardBg: "bg-purple-950/40",
+  },
+
+  {
+    logo: FiMessageCircle,
+    text: "Message",
+    para: "Connect and communicate with other learners.",
+    img: message,
+
+    iconBg: "bg-red-400",
+    iconColor: "text-white",
+    cardBg: "bg-purple-950/40",
+  },
+  {
+    logo: FiMessageCircle,
+    text: "Message",
+    para: "Connect and communicate with other learners.",
+    img: message,
+
+    iconBg: "bg-red-400",
+    iconColor: "text-white",
+    cardBg: "bg-purple-950/40",
+  },
+];

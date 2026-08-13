@@ -7,6 +7,7 @@ import sharp from "sharp";
 export const addPost = async (req, res) => {
   try {
     const id = req.user.id;
+
     const img = req.file;
     const { caption } = req.body;
 
@@ -217,6 +218,7 @@ export const Dislike = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log("userId", req.user._id);
     const postId = req.params.id;
     const { text } = req.body;
     console.log(text);

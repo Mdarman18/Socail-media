@@ -2,8 +2,16 @@ import React, { useState } from "react";
 import { FaBell, FaSearch, FaPlus } from "react-icons/fa";
 import { LuLogIn } from "react-icons/lu";
 import CreatePost from "./CreatePost";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/CreateSlice";
+import { useNavigate } from "react-router-dom";
 const Search = () => {
   const [isOpen, setIsopen] = useState(false);
+
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className="w-full sm:block hidden">
@@ -42,7 +50,9 @@ const Search = () => {
 
             {/* Logout */}
             <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition duration-300 font-medium text-sm sm:text-base">
-              <span className="hidden sm:block">Logout</span>
+              <span onClick={handleLogout} className="hidden sm:block">
+                Logout
+              </span>
               <LuLogIn className="text-lg" />
             </button>
           </div>

@@ -24,12 +24,13 @@ export const SocketContextProvider = ({ children }) => {
         },
         transports: ["websocket"],
       });
-      // socketInstance = io("http://localhost:4400", {
-      //   query: {
-      //     userId: user._id,
-      //   },
-      //   transports: ["websocket"],
-      // });
+    // if (user?._id) {
+    //   socketInstance = io("http://localhost:4400", {
+    //     query: {
+    //       userId: user._id,
+    //     },
+    //     transports: ["websocket"],
+    //   });
 
       setSocket(socketInstance);
 

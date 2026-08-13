@@ -33,13 +33,12 @@ export const PostSection = () => {
       if (!isLiked) {
         const res = await postUrl.post(`/like/${id}`);
         dispatch(likePost(res.data.post));
-        console.log("liked", res.data);
       } else {
         const res = await postUrl.post(`/dislike/${id}`);
         dispatch(likePost(res.data.post));
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data?.message || "Something went wrong!");
     }
   };
   // ========-------Handle Comment ----==================
