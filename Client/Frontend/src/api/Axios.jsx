@@ -17,6 +17,10 @@
 //   baseURL: "http://localhost:4400/api/message",
 //   withCredentials: true,
 // });
+// // export const verifyMe = axios.create({
+//   baseURL: `http://localhost:4400/`,
+// withCredentials: true,
+// });
 
 import axios from "axios";
 
@@ -39,5 +43,9 @@ export const postUrl = axios.create({
 
 export const messageUrl = axios.create({
   baseURL: `${API_URL}/api/message`,
+  withCredentials: true,
+});
+export const verifyMe = axios.create({
+  baseURL: `${API_URL}`,
   withCredentials: true,
 });

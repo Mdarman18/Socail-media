@@ -5,6 +5,7 @@ import { routes } from "./routes/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/CreateSlice";
 import axios from "axios";
+import { verifyMe } from "./api/Axios";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const App = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:4400/me", {
+        const res = await verifyMe.get("/me", {
           withCredentials: true,
         });
         console.log("sucessss");
