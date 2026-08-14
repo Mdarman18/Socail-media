@@ -32,7 +32,16 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 connectDB();
 
 // Middleware
-app.use(express.json());
+app.use(
+  express.json({
+    limit: "1mb",
+  }),
+);
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
 // app.use(passport.initialize());
 
 // ===========--------- Routes ---------==================

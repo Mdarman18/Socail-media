@@ -76,11 +76,11 @@ const Features = () => {
               </div>
 
               {/* Image Section */}
-              <div className="mt-auto sm:mb-1 sm:p-2 bg-gray-600 rounded-2xl overflow-hidden">
+              <div className="mt-auto sm:mb-1 sm:p-1 bg-gray-600 rounded-2xl overflow-hidden">
                 <img
                   src={ele?.img}
                   alt={ele?.text}
-                  className="block rounded-lg sm:w-[98%] w-full h-54 object-cover transition-transform duration-500 group-hover:scale-105 sm:h-48 md:h-52"
+                  className="block rounded-lg  w-full  h-54  object-contain transition-transform duration-500 group-hover:scale-105 md:h-52"
                 />
               </div>
             </motion.div>

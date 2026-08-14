@@ -17,7 +17,7 @@
 //   baseURL: "http://localhost:4400/api/message",
 //   withCredentials: true,
 // });
-// // export const verifyMe = axios.create({
+// export const verifyMe = axios.create({
 //   baseURL: `http://localhost:4400/`,
 // withCredentials: true,
 // });

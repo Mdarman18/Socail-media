@@ -7,6 +7,9 @@ import {
   FaHeadphones,
   FaBookmark,
   FaArrowCircleDown,
+  FaCheckSquare,
+  FaUsers,
+  FaEdit,
 } from "react-icons/fa";
 import { MdOutlineMenu } from "react-icons/md";
 
@@ -110,6 +113,8 @@ import { FiMessageCircle } from "react-icons/fi";
 import { BsFillPatchQuestionFill } from "react-icons/bs";
 import answer from "../assets/arman.png";
 import message from "../assets/message.png";
+import follow from "../assets/follow.png";
+import place from "../assets/place.png";
 // ========----------features section =========
 export const featurePage = [
   {
@@ -124,7 +129,7 @@ export const featurePage = [
   },
 
   {
-    logo: FaUser,
+    logo: FaCheckSquare,
     text: "Solve Doubt",
     para: "Get accurate and easy-to-understand solutions.",
     img: answer,
@@ -134,12 +139,12 @@ export const featurePage = [
     cardBg: "bg-green-950/40",
   },
   {
-    logo: FiMessageCircle,
-    text: "Message",
-    para: "Connect and communicate with other learners.",
-    img: message,
+    logo: FaUsers,
+    text: "Connect",
+    para: "Follow students, teacher, and learners with similar interests.",
+    img: follow,
 
-    iconBg: "bg-red-400",
+    iconBg: "bg-amber-400",
     iconColor: "text-white",
     cardBg: "bg-purple-950/40",
   },
@@ -155,13 +160,13 @@ export const featurePage = [
     cardBg: "bg-purple-950/40",
   },
   {
-    logo: FiMessageCircle,
-    text: "Message",
-    para: "Connect and communicate with other learners.",
-    img: message,
+    logo: FaEdit,
+    text: "Blogs and Articles",
+    para: "Write ans share blogs,articles and study resources",
+    img: place,
 
-    iconBg: "bg-red-400",
-    iconColor: "text-white",
+    iconBg: "bg-blue-400",
+    iconColor: "text-gray",
     cardBg: "bg-purple-950/40",
   },
 ];
