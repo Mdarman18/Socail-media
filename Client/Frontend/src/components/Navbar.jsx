@@ -5,6 +5,7 @@ import { FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
+import studySharpImage from "../assets/logo.png";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -15,37 +16,21 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Mobile Header Bar (Menu Toggle Button) */}
-      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-amber-500/30 bg-[#d6dbda] p-4 sm:hidden">
-        <span className="text-xl font-bold tracking-wide text-slate-800">
-          Menu
-        </span>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="text-2xl text-slate-800 focus:outline-none"
-        >
-          {isOpen ? <HiX /> : <HiMenu />}
-        </button>
-      </div>
-
-      {/* Backdrop Overlay for Mobile */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-40 bg-black/50 sm:hidden"
-        />
-      )}
-
-      {/* Sidebar Component - Ab Fixed/Sticky Hai */}
+      {/* Sidebar Component */}
       <aside
-        className={`fixed top-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col justify-between overflow-y-auto border-r border-amber-500/30 bg-[#d6dbda] p-4 transition-transform duration-300 ease-in-out sm:sticky sm:top-0 sm:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed hidden sm:flex top-0 right-0 z-50  h-screen w-[80%] max-w-72 shrink-0 flex-col justify-between overflow-y-auto bg-white p-0 shadow-2xl transition-transform duration-300 ease-out will-change-transform sm:sticky sm:top-0 sm:py-4 sm:left-0 sm:right-auto sm:w-64 sm:max-w-none sm:translate-x-0 sm:border-r sm:border-amber-500/30 sm:bg-[#d6dbda] sm:p-2 sm:shadow-none ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } sm:translate-x-0!`}
       >
         <div>
           {/* Header / Logo */}
-          <div className="mb-6 flex items-center justify-between px-3 py-2 text-xl font-bold tracking-wide text-slate-800">
-            <span>Menu</span>
+          <div className="flex items-center  justify-between border-b border-gray-200 px-5  text-lg font-semibold tracking-wide text-slate-800 sm:mb-2 sm:border-none sm:px-3   sm:text-xl sm:font-bold">
+            <img
+              src={studySharpImage}
+              className="rounded-full  h-20  object-cover
+            "
+              alt=""
+            />
             {/* Close icon for mobile inside drawer */}
             <button
               onClick={() => setIsOpen(false)}
@@ -56,7 +41,7 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex w-full flex-col gap-2">
+          <nav className="flex w-full flex-col sm:gap-2 sm:px-0">
             {NavbarData.map((ele, idx) => {
               const Icon = ele.Icon;
               return (
@@ -64,14 +49,16 @@ const Navbar = () => {
                   key={idx}
                   to={ele.path}
                   onClick={() => setIsOpen(false)}
-                  className="group flex w-full cursor-pointer items-center justify-start gap-4 rounded-xl px-4 py-3 font-medium text-white transition-all duration-200 hover:bg-[#76df66] hover:shadow-md"
+                  className="group flex w-full cursor-pointer items-center justify-start gap-4 border-b border-gray-100 px-5 py-4 font-medium text-slate-800 transition-colors duration-150 active:bg-gray-100 sm:rounded-xl sm:border-none sm:px-4 sm:py-3 sm:text-white sm:hover:bg-[#76df66] sm:hover:shadow-md sm:active:scale-[0.98]"
                 >
                   {Icon && (
-                    <span className="text-slate-700 transition-colors group-hover:text-white">
+                    <span className="text-slate-700 transition-colors sm:group-hover:text-white">
                       <Icon className="h-5 w-5" />
                     </span>
                   )}
-                  <span className="text-sm font-semibold">{ele.text}</span>
+                  <span className="text-[15px] font-semibold sm:text-sm">
+                    {ele.text}
+                  </span>
                 </Link>
               );
             })}
@@ -79,18 +66,18 @@ const Navbar = () => {
         </div>
 
         {/* Profile & Dark Mode Section */}
-        <div className="mt-6 flex flex-col gap-3">
-          <div className="w-full rounded-2xl bg-white p-3 shadow-md">
-            <div className="flex items-center gap-4 cursor-pointer">
+        <div className="flex flex-col gap-3 border-t border-gray-200  sm:border-none sm:p-0">
+          <div className="flex w-full items-center gap-3 mt-6 rounded-2xl bg-white p-2 sm:p-3 sm:shadow-md">
+            <div className="flex items-center gap-2 cursor-pointer  sm:gap-2">
               <img
                 src={user?.img || "/default-avatar.png"}
                 onClick={() => navigate("/profile")}
                 alt="Profile"
-                className="h-16 w-16 rounded-full border object-cover"
+                className="h-11 w-11 shrink-0 rounded-full border border-gray-300 object-cover sm:h-16 sm:w-16"
               />
 
-              <div className="min-w-0 flex-1">
-                <h1 className="truncate text-lg font-semibold">
+              <div className="min-w-0 ">
+                <h1 className="truncate text-[13px] font-semibold sm:text-lg">
                   {user?.username || "User"}
                 </h1>
                 <p className="truncate text-sm text-gray-500">@nickname</p>
@@ -98,7 +85,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="flex h-fit w-full items-center justify-between rounded-full bg-white p-4 shadow-sm">
+          <div className="flex h-fit w-full items-center justify-between rounded-full bg-gray-50 p-3 sm:bg-white sm:p-4 sm:shadow-sm">
             <span className="text-lg text-yellow-500">
               {darkMode ? <FaMoon /> : <IoSunny />}
             </span>
@@ -109,7 +96,7 @@ const Navbar = () => {
 
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className={`relative h-6 w-12 rounded-full transition-all duration-300 ${
+              className={`relative h-6 w-12 shrink-0 rounded-full transition-all duration-300 ${
                 darkMode ? "bg-violet-600" : "bg-gray-300"
               }`}
             >

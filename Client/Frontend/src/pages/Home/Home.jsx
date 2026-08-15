@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { PostSection } from "./PostSection";
 import { persistor } from "../../store/store";
+import Search from "../../components/Search";
 
 const Home = () => {
   // Dummy stories data — baad mein API se aayega
@@ -14,10 +15,11 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full p-4 ">
-      <div className="mx-auto w-full max-w-full px-3 sm:px-4 md:px-0">
+    <div className="min-h-screen w-full  ">
+      <Search />
+      <div className="mx-4 w-full max-w-full px-3 sm:px-4 md:px-0">
         {/* Story Section */}
-        <div className="z-20 w-full -mx-3 border-b border-gray-200  px-3 py-3 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/90 sm:-mx-4 sm:px-4 sm:py-4 md:mx-0 md:rounded-xl md:border md:px-4">
+        {/* <div className="z-20 hidden sm:block w-full -mx-3 border-b border-gray-200  px-3 py-3 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/90 sm:-mx-4 sm:px-4 sm:py-4 md:mx-0 md:rounded-xl md:border md:px-4">
           <div className=" flex gap-3 overflow-x-auto sm:gap-4">
             {stories.map((story) => (
               <div
@@ -41,13 +43,13 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-                <span className="max-w-[60px] truncate text-[11px] text-gray-600 dark:text-gray-300 sm:text-xs">
+                <span className="max-w-15 truncate text-[11px] text-gray-600 dark:text-gray-300 sm:text-xs">
                   {story.name}
                 </span>
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Post Section */}
         <div className="py-4 sm:py-6">

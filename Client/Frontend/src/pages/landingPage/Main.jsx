@@ -105,7 +105,7 @@ const Main = () => {
           initial={{ opacity: 0, scale: 0.94, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative flex w-full flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:justify-end lg:py-0"
+          className="relative flex w-full flex-1 items-center justify-center px-4 sm:py-8 sm:px-6 lg:justify-end lg:py-0"
         >
           <div className="flex w-full max-w-6xl items-center justify-center gap-8 xl:gap-12">
             {/* ================================================= */}
@@ -119,6 +119,8 @@ const Main = () => {
               {/* Phone */}
               <div
                 className="
+                hidden
+                sm:block
               relative
               h-162.5
               w-77.5
