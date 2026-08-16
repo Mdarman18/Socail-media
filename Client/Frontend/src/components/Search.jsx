@@ -83,7 +83,7 @@ const Search = () => {
                 key={idx}
                 to={ele.path}
                 onClick={() => setMenu(false)}
-                className="group flex items-center gap-4 px-4 py-3 rounded-xl font-medium text-slate-700 active:bg-blue-50 active:text-blue-600 transition-colors"
+                className="group flex items-center gap-4 px-4 py-3 rounded-xl font-medium text-blue-400 active:bg-blue-50 active:text-blue-600 transition-colors"
               >
                 {Icon && (
                   <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-slate-600 group-active:bg-blue-100 group-active:text-blue-600 transition-colors">
