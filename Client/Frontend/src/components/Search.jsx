@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaBell, FaSearch, FaPlus } from "react-icons/fa";
 import { LuLogIn } from "react-icons/lu";
 import { HiMenu, HiX } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "./CreatePost";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/CreateSlice";
@@ -14,6 +14,7 @@ const Search = () => {
   const [menu, setMenu] = useState(false); // Mobile menu toggle ke liye
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth?.user);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -46,7 +47,7 @@ const Search = () => {
           <button
             type="button"
             onClick={() => setMenu(!menu)}
-            className="relative flex items-center justify-center w-9 h-9 rounded-full text-slate-800 active:bg-slate-100 transition-colors focus:outline-none"
+            className="relative flex cursor-pointer items-center justify-center w-9 h-9 rounded-full text-slate-800 active:bg-slate-100 transition-colors focus:outline-none"
           >
             <HiMenu
               className={`absolute text-2xl transition-all duration-200 ${
@@ -68,7 +69,7 @@ const Search = () => {
 
       {/* 3. MOBILE DROPDOWN MENU */}
       <div
-        className={`absolute top-full left-0 w-full bg-white/95 backdrop-blur-md shadow-xl border-b border-slate-200 z-40 sm:hidden flex flex-col p-3 rounded-b-2xl origin-top transition-all duration-200 ease-out ${
+        className={`absolute top-full left-0 w-full bg-black/10 backdrop-blur-lg shadow-xl border-b border-slate-200 z-40 sm:hidden flex flex-col p-3 rounded-b-2xl origin-top transition-all duration-200 ease-out ${
           menu
             ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-y-95 -translate-y-2 pointer-events-none"
@@ -99,6 +100,9 @@ const Search = () => {
         <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between px-1">
           <div className="flex items-center gap-3 min-w-0">
             <img
+              onClick={() => {
+                navigate("/profile");
+              }}
               src={user?.img || "/default-avatar.png"}
               alt="Profile"
               className="h-10 w-10 rounded-full object-cover ring-2 ring-blue-100 shrink-0"
@@ -109,7 +113,7 @@ const Search = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-red-50 text-red-600 text-xs font-semibold active:bg-red-100 transition-colors shrink-0"
+            className="flex cursor-pointer items-center gap-1.5 px-3 py-2 rounded-full bg-red-50 text-red-600 text-xs font-semibold active:bg-red-100 transition-colors shrink-0"
           >
             <span>Logout</span>
             <LuLogIn className="text-sm" />

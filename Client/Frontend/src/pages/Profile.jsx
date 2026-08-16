@@ -71,7 +71,7 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={() => setEdit(true)}
-                className="flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-slate-800 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition-colors self-center sm:self-start shrink-0"
+                className="flex items-center cursor-pointer justify-center gap-2 bg-white/95 hover:bg-white text-slate-800 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition-colors self-center sm:self-start shrink-0"
               >
                 <FaEdit className="text-indigo-500" />
                 Edit Profile

@@ -16,6 +16,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen w-full  ">
+      {" "}
       <Search />
       <div className="mx-4 w-full max-w-full px-3 sm:px-4 md:px-0">
         {/* Story Section */}
