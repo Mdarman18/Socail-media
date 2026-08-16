@@ -121,9 +121,7 @@ const Search = () => {
         </div>
       </div>
 
-      {/* 2. DESKTOP NAVIGATION (Bade screen par search, create post, logout sab dikhega) */}
       <nav className="hidden sm:flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:p-4 w-full bg-white shadow-sm border-b border-slate-200">
-        {/* Search Bar Container */}
         <div className="flex items-center gap-2 bg-slate-100 border border-slate-300 rounded-lg px-3 py-1.5 sm:py-2 flex-1 max-w-xs sm:max-w-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all">
           <span className="text-slate-400 text-sm sm:text-base">
             <FaSearch />
@@ -153,7 +151,7 @@ const Search = () => {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition duration-300 font-medium text-sm sm:text-base"
+              className="flex items-center cursor-pointer gap-2 px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition duration-300 font-medium text-sm sm:text-base"
             >
               <span>Logout</span>
               <LuLogIn className="text-lg" />

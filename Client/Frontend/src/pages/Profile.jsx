@@ -30,7 +30,7 @@ const Profile = () => {
   return (
     <div className="w-full min-h-screen bg-slate-50 p-3 sm:p-6 flex flex-col gap-4 sm:gap-6">
       {/* Header Card */}
-      <section className="rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-gradient-to-br from-indigo-500 via-violet-500 to-blue-500">
+      <section className="rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-linear-to-br from-indigo-500 via-violet-500 to-blue-500">
         <div className="p-5 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6">
           {/* Avatar */}
           <div className="shrink-0 relative">

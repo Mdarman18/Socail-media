@@ -170,7 +170,31 @@ export const PostSection = () => {
   useEffect(() => {
     getPost();
   }, []);
+  // ===============================
+  // HANDLE DATE/TIME
+  // ===============================
+  const getTimeAgo = (createdAt) => {
+    const difference = new Date() - new Date(createdAt);
 
+    const seconds = Math.floor(difference / 1000);
+    const minutes = Math.floor(difference / (1000 * 60));
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+
+    if (seconds < 60) {
+      return `${seconds}s ago`;
+    }
+
+    if (minutes < 60) {
+      return `${minutes}m ago`;
+    }
+
+    if (hours < 24) {
+      return `${hours}h ago`;
+    }
+
+    return `${days}d ago`;
+  };
   // ===============================
   // JSX
   // ===============================
@@ -268,9 +292,13 @@ export const PostSection = () => {
                           className="h-9 w-9 shrink-0 cursor-pointer rounded-full object-cover ring-2 ring-indigo-100 dark:ring-gray-700 sm:h-10 sm:w-10"
                         />
 
-                        <span className="truncate text-sm font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                        <div className="truncate flex flex-col text-sm font-semibold tracking-tight text-gray-900 dark:text-gray-100">
                           {ele?.author?.username || "User"}
-                        </span>
+                          <span className="font-light text-sm">
+                            {" "}
+                            {getTimeAgo(ele?.createdAt)}
+                          </span>
+                        </div>
                       </div>
 
                       {/* MORE BUTTON */}
@@ -292,7 +320,7 @@ export const PostSection = () => {
                       <img
                         src={ele?.img}
                         alt="Post"
-                        className="max-h-[480px] w-full object-cover"
+                        className="max-h-120 w-full object-cover"
                       />
                     ) : ele?.pdf ? (
                       /* PDF */
