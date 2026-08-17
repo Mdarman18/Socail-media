@@ -32,7 +32,9 @@ export const handleSignup = async (req, res) => {
       email,
       password: hashedPassword,
       gender,
-    }).select("-password");
+    });
+    const userData = user.toObject();
+    delete userData.password;
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -53,13 +55,15 @@ export const handleSignup = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Signup successful",
-      user,
+      user: userData,
     });
+    console.log(userData);
   } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
     });
+    console.log(error.message);
   }
 };
 
