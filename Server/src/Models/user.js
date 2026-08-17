@@ -81,6 +81,18 @@ const userSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    currentStreak: {
+      type: Number,
+      default: 0,
+    },
+    longestStreak: {
+      type: Number,
+      default: 0,
+    },
+    lastActiveDate: {
+      type: Date,
+      default: null,
+    },
   },
 
   { timestamps: true },
