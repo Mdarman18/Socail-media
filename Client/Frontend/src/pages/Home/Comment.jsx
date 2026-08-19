@@ -7,11 +7,15 @@ import {
   setuserComment,
   clearComment,
 } from "../../store/CreateSlice";
+import { LuChevronUp, LuChevronDown } from "react-icons/lu";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Comment = ({ showComments, setShowComments, id }) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(true); // 👈 Loading state add kiya hai
 
   // Redux se comments
   const userComment = useSelector((state) => state.comment.usercomment);
@@ -23,20 +27,19 @@ const Comment = ({ showComments, setShowComments, id }) => {
     if (!showComments || !id) return;
 
     const getComments = async () => {
+      setLoading(true);
       try {
         const res = await postUrl.get(`/getcomment/${id}`);
-
-        console.log("Comments API:", res.data);
 
         dispatch(setuserComment(res.data.comments || []));
       } catch (error) {
         toast.error(error.response?.data?.message || "Failed to load comments");
+      } finally {
+        setLoading(false);
       }
     };
 
     getComments();
-
-    // Component/post change hone par old comments remove
     return () => {
       dispatch(clearComment());
     };
@@ -54,11 +57,7 @@ const Comment = ({ showComments, setShowComments, id }) => {
       const res = await postUrl.post(`/addcomment/${id}`, {
         text: comment,
       });
-
-      console.log("Add comment:", res.data);
-
       toast.success(res.data.message);
-
       // New comment Redux mein add
       dispatch(addComment(res.data.comment));
 
@@ -72,12 +71,16 @@ const Comment = ({ showComments, setShowComments, id }) => {
   };
 
   // ==============================
-  // LIKE
+  // VOTE (UPVOTE / DOWNVOTE)
   // ==============================
-  const handleLike = (commentId) => {
-    console.log("Like comment:", commentId);
-
-    // Like API baad mein add kar sakte ho
+  const handleVote = async (commentId, type) => {
+    console.log(`Comment ${commentId} action:`, type);
+    try {
+      const res = await postUrl.post(`/upvote/${commentId}`);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!showComments) {
@@ -93,7 +96,7 @@ const Comment = ({ showComments, setShowComments, id }) => {
 
           <button
             onClick={() => setShowComments(false)}
-            className="rounded-full px-3 py-1 text-xl text-slate-500 hover:bg-slate-100"
+            className="rounded-full cursor-pointer px-3 py-1 text-xl text-slate-500 hover:bg-slate-100"
           >
             ✕
           </button>
@@ -101,7 +104,26 @@ const Comment = ({ showComments, setShowComments, id }) => {
 
         {/* COMMENTS */}
         <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
-          {userComment.length === 0 ? (
+          {loading ? (
+            // ==============================
+            // SKELETON LOADER UI
+            // ==============================
+            <div className="space-y-5 animate-pulse">
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="flex gap-3">
+                  {/* Avatar Skeleton */}
+                  <div className="h-10 w-10 shrink-0 rounded-full bg-slate-200" />
+
+                  {/* Content Skeleton */}
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <div className="h-4 w-28 rounded bg-slate-200" />
+                    <div className="h-4 w-full rounded bg-slate-200" />
+                    <div className="h-3 w-20 rounded bg-slate-200" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : userComment.length === 0 ? (
             <div className="flex h-full items-center justify-center text-center">
               <div>
                 <h3 className="font-semibold text-slate-700">
@@ -117,9 +139,12 @@ const Comment = ({ showComments, setShowComments, id }) => {
             userComment.map((item) => (
               <div key={item._id} className="flex gap-3">
                 {/* Avatar */}
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-600 font-semibold text-white">
-                  {item.author?.username?.charAt(0)?.toUpperCase() || "U"}
-                </div>
+                <img
+                  onClick={() => navigate(`userProfile/${item?.author?._id}`)}
+                  src={item.author?.img || ""}
+                  alt={item.author?.username || "User"}
+                  className="h-10 w-10 shrink-0 cursor-pointer rounded-full object-cover"
+                />
 
                 {/* Content */}
                 <div className="min-w-0 flex-1">
@@ -132,13 +157,32 @@ const Comment = ({ showComments, setShowComments, id }) => {
                       <p className="mt-1 text-sm text-slate-700">{item.text}</p>
                     </div>
 
-                    {/* Like */}
-                    <button
-                      onClick={() => handleLike(item._id)}
-                      className="shrink-0 text-lg"
-                    >
-                      ♡
-                    </button>
+                    {/* Up / Downvote Section with React Icons */}
+                    <div className="flex shrink-0 gap-1.5 items-center rounded-lg px-1.5 py-1">
+                      <button
+                        onClick={() => handleVote(item._id, "up")}
+                        className="p-1 cursor-pointer text-slate-500 transition"
+                        title="Upvote"
+                      >
+                        <FaArrowUp
+                          className="hover:text-violet-600"
+                          size={14}
+                        />
+                        <span>0</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleVote(item._id, "down")}
+                        className="p-1 cursor-pointer text-slate-500 transition"
+                        title="Downvote"
+                      >
+                        <FaArrowDown
+                          className="hover:text-violet-600"
+                          size={14}
+                        />
+                        <span>0</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Meta */}
@@ -194,7 +238,7 @@ const Comment = ({ showComments, setShowComments, id }) => {
             {/* Post */}
             <button
               type="submit"
-              disabled={!comment.trim()}
+              disabled={!comment.tailwind}
               className="
                 rounded-xl
                 bg-violet-600

@@ -11,6 +11,11 @@ import {
   CheckCircle2,
   UserPlus,
   UserCheck,
+  Globe,
+  Mail,
+  Calendar,
+  Flame,
+  Trophy,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -39,7 +44,7 @@ const UserProfile = () => {
       const res = await profileUrl.get(`/get/${id}`);
       dispatch(setUserProfile(res.data.user));
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -79,7 +84,7 @@ const UserProfile = () => {
         </div>
 
         {/* Profile Card */}
-        <div className="relative  bg-white rounded-2xl p-6 shadow-sm border border-purple-50">
+        <div className="relative bg-white rounded-2xl p-6 shadow-sm border border-purple-50">
           {/* Top Section: Avatar, Name, Buttons */}
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             {/* Image + User Info */}
@@ -109,11 +114,9 @@ const UserProfile = () => {
             {/* Action Buttons */}
             <div className="flex items-center gap-2 self-start md:self-auto">
               {(() => {
-                
-                // 2. Check kiya ki current user ID is list me hai ya nahi
                 const isFollowing = userProfile?.followers?.some(
                   (followerId) =>
-                    followerId ?.toString() === user?._id?.toString(),
+                    followerId?.toString() === user?._id?.toString(),
                 );
 
                 return (
@@ -121,7 +124,7 @@ const UserProfile = () => {
                     onClick={handleFollowUnfollow}
                     className={`flex items-center cursor-pointer gap-1.5 text-white text-sm font-medium px-4 py-2 rounded-4xl transition-all shadow-sm ${
                       isFollowing
-                        ? "bg-gray-500 hover:bg-gray-700" // Typo 'gary' fixed to 'gray'
+                        ? "bg-gray-500 hover:bg-gray-700"
                         : "bg-indigo-500 hover:bg-indigo-600"
                     }`}
                   >
@@ -148,19 +151,13 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {/* Bio & Location Details */}
+          {/* Education & Info Details */}
           <div className="mt-4 space-y-2">
-            {userProfile?.bio && (
-              <p className="text-sm text-gray-700 max-w-2xl leading-relaxed whitespace-pre-line">
-                {userProfile.bio}
-              </p>
-            )}
-
             <div className="flex items-center gap-4 text-xs font-medium text-gray-500 pt-1 flex-wrap">
               {userProfile?.location && (
                 <div className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                  <span>{userProfile.location}, India</span>
+                  <span>{userProfile.location}</span>
                 </div>
               )}
 
@@ -198,7 +195,7 @@ const UserProfile = () => {
                   <button
                     key={tab.name}
                     onClick={() => setActiveTab(tab.name)}
-                    className={`relative py-3 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
+                    className={`relative py-3 cursor-pointer text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2 ${
                       isActive
                         ? "text-indigo-600"
                         : "text-gray-500 hover:text-gray-700"
@@ -226,6 +223,135 @@ const UserProfile = () => {
               })}
             </nav>
           </div>
+        </div>
+
+        {/* Tab Content Section */}
+        <div className="mt-6">
+          {activeTab === "Overview" && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-4 items-start">
+              {/* About Me Section */}
+              <div className="lg:col-span-2 max-w-lg bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+                <h2 className="text-sm sm:text-sm md:text-xl font-bold text-slate-800 mb-3">
+                  About Me
+                </h2>
+                {userProfile?.bio ? (
+                  <p className="text-slate-600 text-xs sm:text-sm leading-tight mb-4">
+                    "{userProfile.bio}"
+                  </p>
+                ) : (
+                  <p className="text-slate-400 text-xs sm:text-sm italic mb-4">
+                    No bio added yet.
+                  </p>
+                )}
+
+                <div className="flex flex-col gap-1.5">
+                  {userProfile?.location && (
+                    <div className="flex items-center gap-2 text-slate-600 text-xs sm:text-sm">
+                      <MapPin className="text-indigo-500 shrink-0 w-4 h-4" />
+                      <span className="truncate">{userProfile.location}</span>
+                    </div>
+                  )}
+
+                  {userProfile?.website && (
+                    <div className="flex items-center gap-2 text-slate-600 text-xs sm:text-sm">
+                      <Globe className="text-indigo-500 shrink-0 w-4 h-4" />
+                      <span className="truncate">{userProfile.website}</span>
+                    </div>
+                  )}
+
+                  {userProfile?.email && (
+                    <div className="flex items-center gap-2 text-slate-600 text-xs sm:text-sm">
+                      <Mail className="text-indigo-500 shrink-0 w-4 h-4" />
+                      <span className="truncate">{userProfile.email}</span>
+                    </div>
+                  )}
+
+                  {userProfile?.createdAt && (
+                    <div className="flex items-center gap-2 text-slate-600 text-xs sm:text-sm">
+                      <Calendar className="text-indigo-500 shrink-0 w-4 h-4" />
+                      <span>
+                        Joined{" "}
+                        {new Date(userProfile.createdAt).toLocaleDateString(
+                          "en-IN",
+                          {
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Learning Streak Section */}
+              <div className="rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <div className="flex flex-col gap-4 p-4 sm:p-5">
+                  <p className="text-[11px] sm:text-sm text-slate-500 font-medium">
+                    Learning Streak
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    {/* Current Streak */}
+                    <div className="flex items-center gap-2">
+                      <Flame className="text-orange-500 text-lg sm:text-xl w-5 h-5" />
+                      <div className="flex items-baseline gap-1">
+                        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 leading-none">
+                          {userProfile?.currentStreak || 0}
+                        </h1>
+                        <span className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                          days
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-8 w-px bg-slate-200" />
+
+                    {/* Longest Streak */}
+                    <div className="flex items-center gap-2">
+                      <Trophy className="text-amber-500 text-lg sm:text-xl w-5 h-5" />
+                      <div className="flex flex-col">
+                        <div className="flex items-baseline gap-1">
+                          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 leading-none">
+                            {userProfile?.longestStreak || 0}
+                          </h1>
+                          <span className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                            days
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-slate-400">Longest</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "Posts" && (
+            <div className="bg-white rounded-2xl p-6 text-center text-gray-500 shadow-sm border border-purple-50">
+              Posts content will appear here.
+            </div>
+          )}
+
+          {activeTab === "Notes" && (
+            <div className="bg-white rounded-2xl p-6 text-center text-gray-500 shadow-sm border border-purple-50">
+              Notes content will appear here.
+            </div>
+          )}
+
+          {activeTab === "Streaks" && (
+            <div className="bg-white rounded-2xl p-6 text-center text-gray-500 shadow-sm border border-purple-50">
+              Streaks content will appear here.
+            </div>
+          )}
+
+          {activeTab === "Achievements" && (
+            <div className="bg-white rounded-2xl p-6 text-center text-gray-500 shadow-sm border border-purple-50">
+              Achievements content will appear here.
+            </div>
+          )}
         </div>
       </div>
     </div>

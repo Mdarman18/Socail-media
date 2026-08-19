@@ -218,11 +218,8 @@ export const Dislike = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("userId", req.user._id);
     const postId = req.params.id;
     const { text } = req.body;
-    console.log(text);
-
     // Check comment text
     if (!text || text.trim() === "") {
       return res.status(400).json({
@@ -297,6 +294,123 @@ export const getComment = async (req, res) => {
     });
   }
 };
+
+// ==========---------------------====================
+// Handle Upvote and Downvote
+export const handleUpvote = async (req, res) => {
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    const alreadyUpvoted = comment.upvote.some(
+      (id) => id.toString() === userId.toString(),
+    );
+
+    if (alreadyUpvoted) {
+      // Already upvoted → remove upvote
+      comment.upvote = comment.upvote.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+
+      await comment.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Upvote removed successfully",
+        comment,
+      });
+    }
+
+    // If user had downvoted → remove downvote
+    comment.downvote = comment.downvote.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+
+    // Add upvote
+    comment.upvote.push(userId);
+
+    await comment.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment upvoted successfully",
+      comment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
+// ===========--------------==========
+// Handle downvote
+// ===========-----------------=====================
+export const handleDownvote = async (req, res) => {
+  const commentId = req.params.id;
+  const userId = req.user.id;
+
+  try {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    const alreadyDownvoted = comment.downvote.some(
+      (id) => id.toString() === userId.toString(),
+    );
+
+    if (alreadyDownvoted) {
+      // Already downvoted → remove downvote
+      comment.downvote = comment.downvote.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+
+      await comment.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Downvote removed successfully",
+        comment,
+      });
+    }
+
+    // Remove existing upvote
+    comment.upvote = comment.upvote.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+
+    // Add downvote
+    comment.downvote.push(userId);
+
+    await comment.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Comment downvoted successfully",
+      comment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
+// ================-----------------------==================
 // ========-----------Delete a post --------==============
 export const DeletePost = async (req, res) => {
   try {

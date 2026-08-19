@@ -405,7 +405,7 @@ export const PostSection = () => {
                           onClick={() => {
                             handleComment(ele._id);
                           }}
-                          className="p-1 text-gray-700 transition-colors duration-200 hover:text-indigo-500 dark:text-gray-300"
+                          className="p-1 cursor-pointer text-gray-700 transition-colors duration-200 hover:text-indigo-500 dark:text-gray-300"
                         >
                           <FiMessageCircle className="h-6 w-6" />
                         </button>

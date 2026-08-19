@@ -14,13 +14,18 @@ import {
   FaFire,
   FaTrophy,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import EditProfile from "../components/EditProfile";
+import { MdDelete } from "react-icons/md";
+
+import { useDispatch, useSelector } from "react-redux";
+
 import { postUrl } from "../api/Axios";
+import { deletePost, setPosts } from "../store/CreateSlice"; // setPosts ko import kiya
+import toast from "react-hot-toast";
+import EditProfile from "../components/EditProfile";
 
 const TABS = ["Overview", "My Activity", "Achievements", "Saved Items"];
 
-// Skeleton loader card - "My Activity" post cards jaisa hi structure, animate-pulse ke saath
+// Skeleton loader card
 const SkeletonCard = () => (
   <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm animate-pulse">
     <div className="aspect-square w-full bg-slate-200" />
@@ -40,13 +45,17 @@ const SkeletonCard = () => (
 
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
+
+  // Redux se posts aur loading state access kar rahe hain
+  const userPosts = useSelector((state) => state.post.userPosts);
+
   const [edit, setEdit] = useState(false);
   const [activeTab, setActiveTab] = useState("Overview");
-  const [activity, setActivity] = useState({ posts: [] });
   const [loadingActivity, setLoadingActivity] = useState(false);
+  const dispatch = useDispatch();
 
   const stats = [
-    { label: "Posts", value: user?.post?.length || 0 },
+    { label: "Posts", value: userPosts?.length || 0 }, // Redux posts length
     { label: "Followers", value: user?.followers?.length || 0 },
     { label: "Following", value: user?.following?.length || 0 },
   ];
@@ -55,18 +64,31 @@ const Profile = () => {
     try {
       setLoadingActivity(true);
       const res = await postUrl.get("/getuserpost");
-      setActivity(res?.data || { posts: [] });
+
+      // API se data aane ke baad Redux store mein posts save kar rahe hain
+      dispatch(setPosts(res?.data?.posts || []));
     } catch (error) {
       console.log("API error while fetching posts:", error);
-      setActivity({ posts: [] });
+      dispatch(setPosts([]));
     } finally {
       setLoadingActivity(false);
     }
   };
 
+  // ======------ Handle Delete Function --------==================
+  const handleDelete = async (id) => {
+    try {
+      const res = await postUrl.delete(`/deletepost/${id}`);
+      dispatch(deletePost(id));
+      toast.success(res.data.message || "Post deleted successfully");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete post");
+    }
+  };
+
   useEffect(() => {
     getUserKaProfile();
-  }, [user?.id]);
+  }, [user?.id, dispatch]);
 
   return (
     <div className="w-full min-h-screen bg-slate-50 p-3 sm:p-5 md:p-6 flex flex-col gap-4 sm:gap-6">
@@ -263,7 +285,7 @@ const Profile = () => {
                   My Posts & Activity
                 </h2>
                 <span className="text-[11px] sm:text-xs text-slate-400 font-medium">
-                  {activity?.posts?.length || 0} posts
+                  {userPosts?.length || 0} posts
                 </span>
               </div>
 
@@ -273,10 +295,9 @@ const Profile = () => {
                     <SkeletonCard key={i} />
                   ))}
                 </div>
-              ) : activity?.posts && activity.posts.length > 0 ? (
-                // items-start => grid cells apni natural height lenge, ek dusre ki wajah se stretch nahi honge
+              ) : userPosts && userPosts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 items-start">
-                  {activity.posts.map((ele) => {
+                  {userPosts.map((ele) => {
                     const pdfFileName = ele?.pdf
                       ? ele.pdf.split("/").pop().replace(/^\d+-/, "")
                       : "";
@@ -333,9 +354,15 @@ const Profile = () => {
                                 <FaHeart className="text-rose-500 text-xl" />
                                 {ele?.likes?.length || 0}
                               </span>
-                              <span className="flex items-center  gap-1.5 hover:text-indigo-500 transition-colors cursor-pointer">
+                              <span className="flex items-center gap-1.5 hover:text-indigo-500 transition-colors cursor-pointer">
                                 <FaComment className="text-gray-500 text-xl" />
                                 {ele?.comment?.length || 0}
+                              </span>
+                              <span
+                                onClick={() => handleDelete(ele._id)}
+                                className="flex items-center gap-1.5 hover:text-red-500 transition-colors cursor-pointer"
+                              >
+                                <MdDelete className="text-gray-500 hover:text-red-500 text-xl" />
                               </span>
                             </div>
 

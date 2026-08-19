@@ -137,7 +137,7 @@ const Search = () => {
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <button
             onClick={() => setIsopen(!isOpen)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap"
+            className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-medium text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap"
           >
             <FaPlus className="text-xs sm:text-sm" />
             <span>Create Post</span>

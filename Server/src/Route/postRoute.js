@@ -8,6 +8,8 @@ import {
   getComment,
   getUserKapost,
   getUserProfile,
+  handleDownvote,
+  handleUpvote,
   Like,
   savedPost,
 } from "../controller/postController.js";
@@ -209,3 +211,46 @@ postRoute.delete("/deletepost/:id", DeletePost);
  *         description: Bookmark updated successfully
  */
 postRoute.post("/bookmarked/:id", savedPost);
+/**
+ * @swagger
+ * /api/post/upvote/{id}:
+ *   post:
+ *     summary: Upvote a post
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 6890d3e9c4a12b4e7f12345
+ *     responses:
+ *       200:
+ *         description: Post upvoted successfully
+ */
+postRoute.post("/upvote/:id", handleUpvote);
+
+/**
+ * @swagger
+ * /api/post/downvote/{id}:
+ *   post:
+ *     summary: Downvote a post
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 6890d3e9c4a12b4e7f12345
+ *     responses:
+ *       200:
+ *         description: Post downvoted successfully
+ */
+postRoute.post("/downvote/:id", handleDownvote);
