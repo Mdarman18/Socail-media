@@ -10,6 +10,7 @@ import {
   FaCheckSquare,
   FaUsers,
   FaEdit,
+  FaChartArea,
 } from "react-icons/fa";
 import { MdOutlineMenu } from "react-icons/md";
 
@@ -20,14 +21,15 @@ export const NavbarData = [
     Icon: FaHome,
   },
   {
+    text: "DASHBOARDS",
+    path: "/search",
+    Icon: FaChartArea,
+  },
+
+  {
     text: "FOCUS ROOM",
     path: "/room",
     Icon: FaHeadphones,
-  },
-  {
-    text: "SEARCH",
-    path: "/search",
-    Icon: FaSearch,
   },
 
   {
