@@ -32,7 +32,7 @@ export const SocketContextProvider = ({ children }) => {
       //     transports: ["websocket"],
       //   });
 
-      //   setSocket(socketInstance);
+      setSocket(socketInstance);
 
       // Online users listen karein aur Redux me update karein
       socketInstance.on("getUserOnline", (onlineUsers) => {
