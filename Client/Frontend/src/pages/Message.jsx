@@ -21,6 +21,7 @@ const BasicOnlineCount = () => {
   // Loading States
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   // Auto scroll ref for messages container
   const messagesEndRef = useRef(null);
@@ -32,19 +33,16 @@ const BasicOnlineCount = () => {
     });
   };
 
-  // Sirf jab naya message aaye ya chat load ho, tab messages container ke andar scroll ho
   useEffect(() => {
     if (allMessages.length > 0) {
       scrollToBottom();
     }
   }, [allMessages.length]);
 
-  // Current user ko online users se remove
   const otherUsers = onlineUsers.filter(
     (id) => id?.toString() !== user?._id?.toString(),
   );
 
-  // Online users ki profiles fetch
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -70,7 +68,6 @@ const BasicOnlineCount = () => {
     }
   }, [onlineUsers, user?._id]);
 
-  // Socket.IO - Receive New Message
   useEffect(() => {
     if (!socket) return;
 
@@ -85,7 +82,6 @@ const BasicOnlineCount = () => {
     };
   }, [socket, dispatch]);
 
-  // Get Chat History
   useEffect(() => {
     if (!selectedUser?._id) return;
 
@@ -108,14 +104,15 @@ const BasicOnlineCount = () => {
     getMessages();
   }, [selectedUser?._id, dispatch]);
 
-  // Send Message
+  // Send Message with Loading Spinner
   const handleSend = async (e) => {
     e.preventDefault();
 
-    if (!message.trim() || !selectedUser?._id) {
+    if (!message.trim() || !selectedUser?._id || isSending) {
       return;
     }
 
+    setIsSending(true);
     try {
       const res = await messageUrl.post(`/addmessage/${selectedUser._id}`, {
         text: message.trim(),
@@ -128,10 +125,11 @@ const BasicOnlineCount = () => {
         "Send message error:",
         error?.response?.data || error.message,
       );
+    } finally {
+      setIsSending(false);
     }
   };
 
-  // Get All users
   const handleGetUser = async () => {
     setLoadingUsers(true);
     try {
@@ -149,6 +147,14 @@ const BasicOnlineCount = () => {
       handleGetUser();
     }
   }, [user?._id]);
+
+  // Helper function to format time (e.g., 10:30 AM)
+  const formatTime = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+  console.log(allMessages);
 
   return (
     <div className="flex flex-col md:flex-row h-[calc(100vh-100px)] w-full overflow-hidden bg-slate-50">
@@ -231,16 +237,16 @@ const BasicOnlineCount = () => {
         </div>
       </div>
 
-      {/* Chat Area - Added h-full and overflow-hidden to contain scrolling */}
+      {/* Chat Area */}
       <div
         className={`flex-1 flex-col h-full bg-slate-50 overflow-hidden ${
           selectedUser ? "flex" : "hidden md:flex"
         }`}
       >
         {selectedUser ? (
-          <div className="flex flex-col h-full  overflow-hidden">
+          <div className="flex flex-col h-full overflow-hidden">
             {/* Chat Header */}
-            <div className="flex items-center justify-between  border-b border-slate-200 bg-white p-3 md:p-4 shrink-0">
+            <div className="flex items-center justify-between border-b border-slate-200 bg-white p-3 md:p-4 shrink-0">
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setSelectedUser(null)}
@@ -280,7 +286,7 @@ const BasicOnlineCount = () => {
               </div>
             </div>
 
-            {/* Messages Box - Explicitly flex-1 and overflow-y-auto so scroll stays inside */}
+            {/* Messages Box */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
               {loadingMessages ? (
                 <div className="space-y-4 animate-pulse">
@@ -314,6 +320,15 @@ const BasicOnlineCount = () => {
                         }`}
                       >
                         <p className="text-sm wrap-break-word">{msg.message}</p>
+
+                        {/* Message Timestamp */}
+                        <div
+                          className={`text-[10px] mt-1 text-right ${
+                            isMe ? "text-violet-200" : "text-slate-400"
+                          }`}
+                        >
+                          {formatTime(msg.createdAt || msg.updatedAt)}
+                        </div>
                       </div>
                     </div>
                   );
@@ -326,7 +341,7 @@ const BasicOnlineCount = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input */}
+            {/* Message Input with Spinner */}
             <form
               onSubmit={handleSend}
               className="border-t border-slate-200 bg-white p-3 shrink-0"
@@ -342,16 +357,19 @@ const BasicOnlineCount = () => {
 
                 <button
                   type="submit"
-                  disabled={!message.trim()}
-                  className="rounded-xl bg-violet-600 px-5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={!message.trim() || isSending}
+                  className="flex items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 min-w-[80px]"
                 >
-                  Send
+                  {isSending ? (
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  ) : (
+                    "Send"
+                  )}
                 </button>
               </div>
             </form>
           </div>
         ) : (
-          /* No Chat Selected */
           <div className="flex flex-1 items-center justify-center p-6">
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full bg-violet-100 text-xl md:text-2xl">
