@@ -14,6 +14,8 @@ import { likePost, setPosts } from "../../store/CreateSlice";
 import { useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 import { toast } from "react-hot-toast";
+import { Motivation } from "../../components/Motivation";
+import Suggest from "../../components/Suggest";
 
 // ===============================
 // POST SKELETON
@@ -21,7 +23,7 @@ import { toast } from "react-hot-toast";
 
 const PostSkeleton = () => {
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="w-full  rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
       {/* Header Skeleton */}
       <div className="p-3 sm:p-4">
         <div className="flex items-center justify-between">
@@ -201,12 +203,12 @@ export const PostSection = () => {
 
   return (
     <>
-      <section className="flex w-full gap-4 sm:max-w-3xl">
+      <section className="flex w-full gap-4 justify-between">
         {/* =====================================
             MAIN POSTS SECTION
         ===================================== */}
 
-        <div className="flex flex-1 flex-col gap-4 py-2 sm:gap-5 sm:py-4">
+        <div className="flex flex-1 flex-col gap-4 max-w-lg  py-2 sm:gap-5 sm:py-4">
           {/* =====================================
               LOADING SKELETON
           ===================================== */}
@@ -273,7 +275,7 @@ export const PostSection = () => {
               return (
                 <div
                   key={ele._id}
-                  className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm ring-1 ring-black/2 transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900 dark:ring-white/2"
+                  className="w-[95%]  overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm ring-1 ring-black/2 transition-shadow duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900 dark:ring-white/2"
                 >
                   {/* =================================
                       POST HEADER
@@ -320,7 +322,7 @@ export const PostSection = () => {
                       <img
                         src={ele?.img}
                         alt="Post"
-                        className="max-h-120 w-full object-cover"
+                        className="max-h-96 w-full "
                       />
                     ) : ele?.pdf ? (
                       /* PDF */
@@ -447,13 +449,6 @@ export const PostSection = () => {
         {/* =====================================
             RIGHT SIDEBAR
         ===================================== */}
-
-        <aside className="hidden w-64 flex-col gap-4 py-2 sm:flex sm:gap-5 sm:py-4">
-          <div className="rounded-2xl border border-gray-100 bg-white p-4 text-sm text-gray-500 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
-            hlo
-          </div>
-        </aside>
-
         {/* =====================================
             COMMENT COMPONENT
         ===================================== */}
@@ -463,6 +458,10 @@ export const PostSection = () => {
           setShowComments={setShowComments}
           id={id}
         />
+        <div className="sticky top-0 h-fit rounded-2xl hidden sm:flex flex-col gap-2 max-w-md mr-10 text-sm text-gray-500 dark:text-gray-400">
+          <Motivation />
+          <Suggest />
+        </div>
       </section>
     </>
   );

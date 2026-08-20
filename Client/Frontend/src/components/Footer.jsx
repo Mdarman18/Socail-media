@@ -38,11 +38,11 @@ const socials = [
 
 const Footer = () => {
   return (
-    <footer className="relative bg-[#111111] text-zinc-400">
+    <footer className="relative  bg-[#111111] text-zinc-400">
       {/* signature accent line */}
-      <div className="h-px w-full bg-linear-to-r mt-1 from-transparent via-violet-500 to-transparent" />
+      <div className="h-px w-full bg-linear-to-r  from-transparent via-violet-500 to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
+      <div className="max-w-full mt-2 px-6 pt-14 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="col-span-2">

@@ -6,14 +6,6 @@ import Search from "../../components/Search";
 const Home = () => {
   // Dummy stories data — baad mein API se aayega
 
-  const stories = [
-    { id: 1, name: "Your Story", isOwn: true },
-    { id: 2, name: "Rahul", avatar: "" },
-    { id: 3, name: "Priya", avatar: "" },
-    { id: 4, name: "Aman", avatar: "" },
-    { id: 5, name: "Simran", avatar: "" },
-  ];
-
   return (
     <div className="min-h-screen w-full  ">
       {" "}

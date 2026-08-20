@@ -137,7 +137,7 @@ export const commentReducers = createSlice({
 
   reducers: {
     setuserComment: (state, action) => {
-      state.usercomment = action.payload;
+      state.usercomment = action.payload || [];
     },
 
     addComment: (state, action) => {
@@ -147,10 +147,19 @@ export const commentReducers = createSlice({
     clearComment: (state) => {
       state.usercomment = [];
     },
+    addUpvote: (state, action) => {
+      const { commentId, upVote } = action.payload;
+
+      const comment = state.usercomment.find((item) => item._id === commentId);
+
+      if (!comment) return;
+
+      comment.upvote = upVote;
+    },
   },
 });
 
-export const { setuserComment, addComment, clearComment } =
+export const { setuserComment, addComment, clearComment, addUpvote } =
   commentReducers.actions;
 
 export const commentReducer = commentReducers.reducer;
