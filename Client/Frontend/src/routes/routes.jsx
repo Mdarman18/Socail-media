@@ -13,6 +13,7 @@ import Land from "../pages/landingPage/Land";
 import ProtectedRoute from "./Protectedroute";
 import GuestRoutes from "./Guestroutes";
 import Features from "../pages/landingPage/Features";
+import App from "../pages/landingPage/App";
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -57,7 +58,10 @@ export const routes = createBrowserRouter([
         path: "overview/study",
         element: <Land />,
       },
-    
+      {
+        path: "overview/how",
+        element: <App />,
+      },
     ],
   },
 ]);

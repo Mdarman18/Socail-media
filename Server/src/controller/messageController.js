@@ -1,12 +1,19 @@
 import Conversation from "../Models/conversationMessage.js";
 import { Message } from "../Models/message.js";
-import { io, userSockets } from "../socket/socekt.js"; // 👈 Sirf socket file ka path (agar spelling 'socekt.js' hai toh wahi rakhein)
+import { io, userSockets } from "../socket/socekt.js";
+import customError from "../utlis/errorHandling.js"; // Aapka custom error class path
 
-export const conversation = async (req, res) => {
+// ===================== SEND MESSAGE =====================
+export const conversation = async (req, res, next) => {
   try {
     const senderId = req.user.id;
     const receiverId = req.params.id;
     const { text: message } = req.body;
+
+    // Optional validation: check if message text is present
+    if (!message || message.trim() === "") {
+      throw new customError("Message text cannot be empty", 400);
+    }
 
     let conversation = await Conversation.findOne({
       participants: {
@@ -39,14 +46,12 @@ export const conversation = async (req, res) => {
       newMessage,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return next(error);
   }
 };
 
-export const getMessage = async (req, res) => {
+// ===================== GET MESSAGES =====================
+export const getMessage = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const receiverId = req.params.id;
@@ -69,9 +74,6 @@ export const getMessage = async (req, res) => {
       messages: conversation.messages,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return next(error);
   }
 };

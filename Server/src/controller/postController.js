@@ -1,41 +1,35 @@
 import { Comment } from "../Models/commentSchema.js";
 import { Post } from "../Models/postSchema.js";
 import { User } from "../Models/user.js";
-import cloudinary from "../utlis/cloud.js"; // Typo check: utlis -> utils
+import cloudinary from "../utlis/cloud.js";
 import sharp from "sharp";
+import customError from "../utlis/errorHandling.js";
 
-export const addPost = async (req, res) => {
+// ===================== ADD POST =====================
+export const addPost = async (req, res, next) => {
   try {
     const id = req.user.id;
-
     const img = req.file;
     const { caption } = req.body;
 
     // 1. Validation: File check
     if (!img) {
-      return res.status(400).json({
-        success: false,
-        message: "Image is required..",
-      });
+      throw new customError("Image is required..", 400);
     }
 
     // 2. Validation: User check
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found..",
-      });
+      throw new customError("User not found..", 404);
     }
 
-    // 3. Image Optimization with Sharp
+    // 3. Image Optimization with Sharp / PDF Upload
     let pdfUrl = "";
     let imgUrl = "";
     const type = img.mimetype;
+
     if (type === "application/pdf") {
-      const fileUri = `data:application/pdf;base64,${img.buffer.toString(
-        "base64",
-      )}`;
+      const fileUri = `data:application/pdf;base64,${img.buffer.toString("base64")}`;
 
       const cloudResponse = await cloudinary.uploader.upload(fileUri, {
         resource_type: "raw",
@@ -54,13 +48,12 @@ export const addPost = async (req, res) => {
         .toFormat("jpeg", { quality: 80 })
         .toBuffer();
 
-      // 4. Base64 conversion (Fixed 'image/jpeg')
       const fileUri = `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`;
       const cloudResponse = await cloudinary.uploader.upload(fileUri);
       imgUrl = cloudResponse.secure_url;
     }
 
-    // 5. Database me Post Create karna
+    // 4. Database me Post Create karna
     const post = await Post.create({
       caption,
       img: imgUrl,
@@ -68,12 +61,11 @@ export const addPost = async (req, res) => {
       author: id,
     });
 
-    // User ke posts array me post ID push karna (agar relation maintain kar rahe hain)
     user.post.push(post._id);
     await user.save();
     await post.populate("author", "-password");
 
-    // 6. Successful Response Send karna
+    // 5. Successful Response Send karna
     return res.status(201).json({
       success: true,
       message: "Post created successfully!",
@@ -81,14 +73,12 @@ export const addPost = async (req, res) => {
       user,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return next(error);
   }
 };
-// ====---Profile ---===========
-export const getUserProfile = async (req, res) => {
+
+// ===================== GET USER PROFILE POSTS =====================
+export const getUserProfile = async (req, res, next) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
@@ -107,25 +97,24 @@ export const getUserProfile = async (req, res) => {
       posts,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return next(error);
   }
 };
 
-export const getUserKapost = async (req, res) => {
-  const authorId = req.user.id;
+// ===================== GET SINGLE USER POSTS =====================
+export const getUserKapost = async (req, res, next) => {
   try {
+    const authorId = req.user.id;
+
     const posts = await Post.find({ author: authorId })
       .sort({ createdAt: -1 })
-      .populate({ path: "author", select: "username,img" })
+      .populate({ path: "author", select: "username img" })
       .populate({
         path: "comment",
         sort: { createdAt: -1 },
         populate: {
           path: "author",
-          select: "username,img",
+          select: "username img",
         },
       });
 
@@ -134,15 +123,12 @@ export const getUserKapost = async (req, res) => {
       posts,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return next(error);
   }
 };
 
-// =========----Like Controller ------============
-export const Like = async (req, res) => {
+// ===================== LIKE POST =====================
+export const Like = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const postId = req.params.id;
@@ -160,10 +146,7 @@ export const Like = async (req, res) => {
     ).populate("author", "username img");
 
     if (!updatedPost) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found...",
-      });
+      throw new customError("Post not found...", 404);
     }
 
     return res.status(200).json({
@@ -172,14 +155,12 @@ export const Like = async (req, res) => {
       post: updatedPost,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return next(error);
   }
 };
 
-export const Dislike = async (req, res) => {
+// ===================== DISLIKE POST =====================
+export const Dislike = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const postId = req.params.id;
@@ -195,10 +176,7 @@ export const Dislike = async (req, res) => {
     ).populate("author", "username img");
 
     if (!updatedPost) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found...",
-      });
+      throw new customError("Post not found...", 404);
     }
 
     return res.status(200).json({
@@ -207,72 +185,52 @@ export const Dislike = async (req, res) => {
       post: updatedPost,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return next(error);
   }
 };
-// =======-------Add Comment ----==========
 
-export const addComment = async (req, res) => {
+// ===================== ADD COMMENT =====================
+export const addComment = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const postId = req.params.id;
     const { text } = req.body;
-    // Check comment text
+
     if (!text || text.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter a comment.",
-      });
+      throw new customError("Please enter a comment.", 400);
     }
 
-    // Find post
     const post = await Post.findById(postId);
-
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found.",
-      });
+      throw new customError("Post not found.", 404);
     }
 
-    // Create comment
     const newComment = await Comment.create({
       text,
       author: userId,
       post: postId,
     });
 
-    // Populate author details
     await newComment.populate({
       path: "author",
       select: "username img",
     });
 
-    // Add comment id to post
     post.comment.push(newComment._id);
-
-    // Save updated post
     await post.save();
 
-    // Response
     return res.status(201).json({
       success: true,
       message: "Comment added successfully.",
       comment: newComment,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
+    return next(error);
   }
 };
 
-// =====-------Get Comment ----=============
-export const getComment = async (req, res) => {
+// ===================== GET COMMENTS =====================
+export const getComment = async (req, res, next) => {
   try {
     const postId = req.params.id;
 
@@ -288,27 +246,19 @@ export const getComment = async (req, res) => {
       comments,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
+    return next(error);
   }
 };
 
-// ==========---------------------====================
-// Handle Upvote and Downvote
-export const handleUpvote = async (req, res) => {
-  const commentId = req.params.id;
-  const userId = req.user.id;
-
+// ===================== HANDLE UPVOTE =====================
+export const handleUpvote = async (req, res, next) => {
   try {
-    const comment = await Comment.findById(commentId);
+    const commentId = req.params.id;
+    const userId = req.user.id;
 
+    const comment = await Comment.findById(commentId);
     if (!comment) {
-      return res.status(404).json({
-        success: false,
-        message: "Comment not found",
-      });
+      throw new customError("Comment not found", 404);
     }
 
     const alreadyUpvoted = comment.upvote.some(
@@ -316,11 +266,9 @@ export const handleUpvote = async (req, res) => {
     );
 
     if (alreadyUpvoted) {
-      // Already upvoted → remove upvote
       comment.upvote = comment.upvote.filter(
         (id) => id.toString() !== userId.toString(),
       );
-
       await comment.save();
 
       return res.status(200).json({
@@ -330,14 +278,10 @@ export const handleUpvote = async (req, res) => {
       });
     }
 
-    // If user had downvoted → remove downvote
     comment.downvote = comment.downvote.filter(
       (id) => id.toString() !== userId.toString(),
     );
-
-    // Add upvote
     comment.upvote.push(userId);
-
     await comment.save();
 
     return res.status(200).json({
@@ -346,27 +290,19 @@ export const handleUpvote = async (req, res) => {
       comment,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
+    return next(error);
   }
 };
-// ===========--------------==========
-// Handle downvote
-// ===========-----------------=====================
-export const handleDownvote = async (req, res) => {
-  const commentId = req.params.id;
-  const userId = req.user.id;
 
+// ===================== HANDLE DOWNVOTE =====================
+export const handleDownvote = async (req, res, next) => {
   try {
-    const comment = await Comment.findById(commentId);
+    const commentId = req.params.id;
+    const userId = req.user.id;
 
+    const comment = await Comment.findById(commentId);
     if (!comment) {
-      return res.status(404).json({
-        success: false,
-        message: "Comment not found",
-      });
+      throw new customError("Comment not found", 404);
     }
 
     const alreadyDownvoted = comment.downvote.some(
@@ -374,11 +310,9 @@ export const handleDownvote = async (req, res) => {
     );
 
     if (alreadyDownvoted) {
-      // Already downvoted → remove downvote
       comment.downvote = comment.downvote.filter(
         (id) => id.toString() !== userId.toString(),
       );
-
       await comment.save();
 
       return res.status(200).json({
@@ -388,14 +322,10 @@ export const handleDownvote = async (req, res) => {
       });
     }
 
-    // Remove existing upvote
     comment.upvote = comment.upvote.filter(
       (id) => id.toString() !== userId.toString(),
     );
-
-    // Add downvote
     comment.downvote.push(userId);
-
     await comment.save();
 
     return res.status(200).json({
@@ -404,41 +334,27 @@ export const handleDownvote = async (req, res) => {
       comment,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
+    return next(error);
   }
 };
-// ================-----------------------==================
-// ========-----------Delete a post --------==============
-export const DeletePost = async (req, res) => {
+
+// ===================== DELETE POST =====================
+export const DeletePost = async (req, res, next) => {
   try {
     const postId = req.params.id;
     const userId = req.user.id;
 
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found.",
-      });
+      throw new customError("Post not found.", 404);
     }
 
     if (post.author.toString() !== userId) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized to delete this post.",
-      });
+      throw new customError("Unauthorized to delete this post.", 403);
     }
 
-    // Delete post document
     await Post.findByIdAndDelete(postId);
-
-    // Remove post ID from user's posts array
-    await User.findByIdAndUpdate(userId, { $pull: { posts: postId } });
-
-    // Delete associated comments
+    await User.findByIdAndUpdate(userId, { $pull: { post: postId } });
     await Comment.deleteMany({ post: postId });
 
     return res.status(200).json({
@@ -446,26 +362,19 @@ export const DeletePost = async (req, res) => {
       message: "Post deleted successfully.",
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
+    return next(error);
   }
 };
 
-// ======------ handle bookmarked --------=================
-export const savedPost = async (req, res) => {
+// ===================== SAVE / BOOKMARK POST =====================
+export const savedPost = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const postId = req.params.id;
 
     const post = await Post.findById(postId);
-
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found",
-      });
+      throw new customError("Post not found", 404);
     }
 
     const user = await User.findById(userId);
@@ -500,9 +409,6 @@ export const savedPost = async (req, res) => {
       message: "Post saved",
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return next(error);
   }
 };

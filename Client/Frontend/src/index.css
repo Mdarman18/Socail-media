@@ -1,6 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+@theme {
+  --font-saira: "Saira", sans-serif;
+  --color-primary: #3525cd;
+  --color-primary-container: #4f46e5;
+  --color-custom-bg: #fcf8ff;
+}
+@theme {
+  --font-display: "Lexend", sans-serif;
+}
+/* Base Layout & Rendering Enhancements */
 html,
 body,
 #root {
@@ -8,18 +18,38 @@ body,
   min-height: 100vh;
 }
 
-body {
-  font-family: "Saira", sans-serif;
-  margin: 0;
+html {
   scroll-behavior: smooth;
+  /* Text rendering ko crisp aur sharp banane ke liye */
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-saira);
+  margin: 0;
   background: linear-gradient(
     145deg,
     #a5a799 0%,
     #eef0ec 30%,
     #81c5da 100%
   );
-
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Smooth Selection & Focus Utilities for Accessibility */
+::selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
 }

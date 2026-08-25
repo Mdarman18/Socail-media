@@ -1,50 +1,51 @@
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import SocialIcons from "./SocialIcons";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearSignInput,
-  loginSuccess,
-  SetSigninInput,
-} from "../../store/CreateSlice";
-import { authUrl } from "../../api/Axios";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../store/CreateSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { registerUser } from "../../Service/userService";
 
 const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Fix 1: State path ko sahi kiya -> state.auth.SigninInput
-  const signinInputs = useSelector((state) => state.auth.SigninInput);
+  // Local state for form inputs
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  // State for password visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
-    dispatch(
-      SetSigninInput({
-        field: e.target.name,
-        value: e.target.value,
-      }),
-    );
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await authUrl.post("/signin", signinInputs);
-      toast.success(res.data.message);
-      dispatch(loginSuccess(res.data.user));
-      dispatch(clearSignInput());
+      const data = await registerUser(formData);
+
+      toast.success(data.message);
+      dispatch(loginSuccess(data.user));
       navigate("/");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong!");
+      toast.error(error.message);
     }
   };
 
-  // Fix 2: Galat action dispatch hata kar page mount hone par inputs clear kiye
+  // Component mount hone par form clear karne ke liye
   useEffect(() => {
-    dispatch(clearSignInput());
-  }, [dispatch]);
+    setFormData({ username: "", email: "", password: "" });
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col justify-center px-8 sm:px-14">
@@ -58,7 +59,7 @@ const Signup = () => {
             type="text"
             placeholder="e.g. arman123"
             name="username"
-            value={signinInputs?.username || ""}
+            value={formData.username}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />
@@ -70,23 +71,30 @@ const Signup = () => {
             type="email"
             placeholder="name@example.com"
             name="email"
-            value={signinInputs?.email || ""}
+            value={formData.email}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <FaEnvelope className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
         </div>
 
+        {/* Password Field with Hide/Show Toggle */}
         <div className="relative">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="e.g. MyPass123"
             name="password"
-            value={signinInputs?.password || ""}
+            value={formData.password}
             onChange={handleChange}
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
           />
-          <FaLock className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+          {/* Lock icon ko left thoda shift kiya ya toggle icon ko right position kiya taaki overlap na ho */}
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm cursor-pointer hover:text-gray-600"
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
         </div>
 
         <button
