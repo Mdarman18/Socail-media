@@ -42,15 +42,6 @@ export default function App() {
         viewport={{ amount: 0.15 }}
         variants={sectionVariant}
       >
-        <About />
-      </motion.div>
-
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.15 }}
-        variants={sectionVariant}
-      >
         <CTASection />
       </motion.div>
     </div>

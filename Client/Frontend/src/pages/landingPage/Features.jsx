@@ -96,7 +96,7 @@ const featuresData = [
             />
           ))}
         </span>
-        <span className="text-[11px] text-slate-500">Aman is typing</span>
+        <span className="text-[11px] text-slate-500">Saiyad is typing</span>
       </div>
     ),
   },
@@ -164,7 +164,7 @@ export default function FeaturesSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ amount: 0.3 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center max-w-2xl mx-auto mb-12 md:mb-16 flex flex-col items-center"
         >
@@ -189,7 +189,7 @@ export default function FeaturesSection() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ amount: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
           {featuresData.map((feature, index) => (

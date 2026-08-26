@@ -1,3 +1,6 @@
+import React from "react";
+import { motion } from "framer-motion";
+
 const chartData = [
   ["Mon", 45],
   ["Tue", 70],
@@ -15,18 +18,33 @@ const subjects = [
 ];
 
 const activities = [
-  ["SK", "KHUSI", "Studying", "Dynamic Programming", "DSA", "now", true],
-  ["RV", "Rohit Verma", "Building", "Auth flow", "MERN Project", "now", true],
-  ["PN", "Priya Nair", "Completed", "System Design", "sheet", "8m ago", false],
-  ["AM", "Aman Mishra", "Hit a", "15-day streak 🔥", "", "24m ago", false],
-  ["DP", "Divya Patel", "Studying", "React Hooks", "Web Dev", "41m ago", false],
+  ["SK", "MD Firdosh", "Studying", "Dynamic Programming", "DSA", "now", true],
+  ["RV", "MD Saiyad", "Building", "Auth flow", "MERN Project", "now", true],
+  [
+    "PN",
+    "Nahid Hussain",
+    "Completed",
+    "System Design",
+    "sheet",
+    "8m ago",
+    false,
+  ],
+  ["AM", "KHUSI", "Hit a", "15-day streak 🔥", "", "24m ago", false],
+  ["DP", "Md Izarail", "Studying", "React Hooks", "Web Dev", "41m ago", false],
 ];
 
 export default function StudyTracker() {
   return (
-    <section className=" px-5 py-20 sm:py-28">
+    <section className="px-5 py-20 sm:py-28 overflow-hidden bg-white">
       <div className="mx-auto max-w-310">
-        <div className="mx-auto mb-16 max-w-170 text-center">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto mb-16 max-w-xl text-center"
+        >
           <span className="inline-flex rounded-full bg-[#eeebff] px-4 py-2 font-mono text-xs uppercase tracking-[.14em] text-[#4a3ae0]">
             ● Stay on track
           </span>
@@ -35,15 +53,22 @@ export default function StudyTracker() {
             Track your own progress. See what others are learning too.
           </h2>
 
-          <p className="mx-auto mt-5 max-w-130 text-base leading-relaxed text-[#565e76]">
+          <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-[#565e76]">
             Log your study hours, keep your streak alive, and stay motivated by
             watching your friends and community learn in real time.
           </p>
-        </div>
+        </motion.div>
 
+        {/* Grid Container */}
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Progress card */}
-          <div className="rounded-3xl border border-[#e7e8f1] bg-white p-6 shadow-sm">
+          {/* Left Card: Progress Card */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="rounded-3xl border border-[#e7e8f1] bg-white p-6 shadow-sm transition-all hover:shadow-md"
+          >
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eeebff] text-xl text-[#4a3ae0]">
@@ -67,16 +92,23 @@ export default function StudyTracker() {
                 ["3h 40m", "Studied today"],
                 ["18h 20m", "This week"],
                 ["96%", "Goal completion"],
-              ].map(([value, label]) => (
-                <div key={label}>
+              ].map(([value, label], idx) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
+                >
                   <b className="block font-display text-xl text-[#10142a]">
                     {value}
                   </b>
                   <span className="text-[11px] text-[#8a90a6]">{label}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
 
+            {/* Animated Bar Chart */}
             <div className="mt-7 flex h-28 items-end gap-2">
               {chartData.map(([day, height], index) => (
                 <div
@@ -84,9 +116,16 @@ export default function StudyTracker() {
                   className="flex h-full flex-1 flex-col items-center gap-2"
                 >
                   <div className="relative h-full w-full max-w-6 overflow-hidden rounded-md bg-[#eff0f7]">
-                    <div
+                    <motion.div
+                      initial={{ height: "0%" }}
+                      whileInView={{ height: `${height}%` }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.8,
+                        delay: 0.2 + index * 0.08,
+                        ease: "easeOut",
+                      }}
                       className="absolute bottom-0 w-full rounded-md bg-linear-to-t from-[#4a3ae0] to-[#7c5cff]"
-                      style={{ height: `${height}%` }}
                     />
                   </div>
                   <span
@@ -102,9 +141,17 @@ export default function StudyTracker() {
               ))}
             </div>
 
+            {/* Subjects Progress Bars */}
             <div className="mt-7 space-y-3">
-              {subjects.map(([name, time, progress, color]) => (
-                <div key={name} className="flex items-center gap-2.5">
+              {subjects.map(([name, time, progress, color], index) => (
+                <motion.div
+                  key={name}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                  className="flex items-center gap-2.5"
+                >
                   <span
                     className="h-2 w-2 rounded-full"
                     style={{ backgroundColor: color }}
@@ -113,21 +160,31 @@ export default function StudyTracker() {
                     {name}
                   </span>
                   <div className="h-1.5 flex-[1.4] overflow-hidden rounded-full bg-[#eff0f7]">
-                    <div
+                    <motion.div
+                      initial={{ width: "0%" }}
+                      whileInView={{ width: `${progress}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.5 + index * 0.1 }}
                       className="h-full rounded-full"
-                      style={{ width: `${progress}%`, backgroundColor: color }}
+                      style={{ backgroundColor: color }}
                     />
                   </div>
                   <span className="font-mono text-[11px] text-[#8a90a6]">
                     {time}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Community card */}
-          <div className="rounded-3xl border border-[#e7e8f1] bg-white p-6 shadow-sm">
+          {/* Right Card: Community Activity Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="rounded-3xl border border-[#e7e8f1] bg-white p-6 shadow-sm transition-all hover:shadow-md"
+          >
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eeebff] text-xl text-[#4a3ae0]">
@@ -150,9 +207,16 @@ export default function StudyTracker() {
 
             <div className="mt-7 divide-y divide-[#eff0f7]">
               {activities.map(
-                ([initials, name, action, subject, category, time, isLive]) => (
-                  <div
+                (
+                  [initials, name, action, subject, category, time, isLive],
+                  index,
+                ) => (
+                  <motion.div
                     key={name}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.2 + index * 0.08 }}
                     className="flex items-center gap-3 py-3 first:pt-0"
                   >
                     <div className="relative">
@@ -180,11 +244,11 @@ export default function StudyTracker() {
                     <span className="font-mono text-[10px] text-[#8a90a6]">
                       {time}
                     </span>
-                  </div>
+                  </motion.div>
                 ),
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
