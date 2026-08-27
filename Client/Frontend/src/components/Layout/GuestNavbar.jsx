@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FiHome, FiCompass, FiInfo } from "react-icons/fi";
-import studySharpImage from "../assets/logo.png";
+import studySharpImage from "../../assets/logo.png";
 
 export default function GuestNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
