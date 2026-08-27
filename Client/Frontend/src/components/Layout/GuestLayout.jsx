@@ -1,7 +1,7 @@
 // src/layouts/GuestLayout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Footer from "../Footer"; // Aapka Footer component
+import Footer from "../Footer"; 
 import GuestNavbar from "./GuestNavbar";
 
 export default function GuestLayout() {
