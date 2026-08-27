@@ -126,7 +126,7 @@ function MockContent({ type }) {
                   whileInView={{ height: `${val}%` }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.05 }}
-                  className="absolute bottom-0 w-full bg-gradient-to-t from-indigo-600 to-violet-500 rounded-t"
+                  className="absolute bottom-0 w-full bg-linear-to-t from-indigo-600 to-violet-500 rounded-t"
                 />
               </div>
             </div>
