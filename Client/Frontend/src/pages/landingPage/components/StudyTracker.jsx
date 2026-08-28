@@ -65,7 +65,7 @@ export default function StudyTracker() {
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+          
             transition={{ duration: 0.6, delay: 0.2 }}
             className="rounded-3xl border border-[#e7e8f1] bg-white p-6 shadow-sm transition-all hover:shadow-md"
           >

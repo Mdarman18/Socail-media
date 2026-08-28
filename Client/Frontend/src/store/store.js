@@ -5,6 +5,7 @@ import {
   commentReducer,
   postReducer,
   profileReducers,
+  studySharpReducer, // ✅ StudySharp reducer import kiya
 } from "./CreateSlice";
 
 import storageModule from "redux-persist/lib/storage";
@@ -25,9 +26,8 @@ const rootReducer = combineReducers({
   post: postReducer,
   profile: profileReducers,
   message: messageReducer,
-
-  // ✅ actual reducer
   comment: commentReducer,
+  studysharp: studySharpReducer, // ✅ StudySharp reducer ko rootReducer mein register kar diya
 });
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);
