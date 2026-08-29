@@ -59,10 +59,10 @@ export default function TopNavbar() {
   );
 
   const isSearch = useSelector(selectSearchModalOpen);
-  console.log("selectSearchModelOpen :-",isSearch);
+  console.log("selectSearchModelOpen :-", isSearch);
 
   return (
-    <header className="sticky top-0 z-20 w-full bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-slate-200/80 dark:border-surface-darkBorder px-4 sm:px-6 py-3 transition-colors">
+    <header className="sticky hidden sm:block top-0 z-20 w-full bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-slate-200/80 dark:border-surface-darkBorder px-4 sm:px-6 py-3 transition-colors">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Left: Global Search Trigger Bar */}
         <div className="flex-1 max-w-xl">

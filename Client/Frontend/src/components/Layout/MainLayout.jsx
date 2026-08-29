@@ -5,6 +5,7 @@ import Sidebar from "../Navbar/Side";
 import Footer from "../Footer";
 import TopNavbar from "../Navbar/Topbar";
 import SearchModal from "../../common/Search";
+import BottomNav from "../Navbar/Bottom";
 
 export default function AppLayout() {
   return (
@@ -17,8 +18,8 @@ export default function AppLayout() {
           <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-5xl w-full mx-auto">
             <Outlet />
           </main>
-          <Footer />
         </div>
+        <BottomNav />
       </div>
       <SearchModal />
     </div>

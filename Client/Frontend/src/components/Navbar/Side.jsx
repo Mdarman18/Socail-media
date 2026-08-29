@@ -168,30 +168,7 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom Section: Mini Timer Widget & User Profile/Actions */}
-      <div className="space-y-3 pt-3 mt-3 border-t border-slate-100 dark:border-surface-darkBorder shrink-0">
-        {/* User Mini Profile & Settings Bar - Fixed Overflow */}
-        <div className="flex flex-col gap-3 border-t border-gray-200  sm:border-none sm:p-0">
-          <div className="flex w-full items-center gap-3 mt-6 rounded-2xl bg-white p-2 sm:p-3 sm:shadow-md">
-            <div className="flex items-center gap-2 cursor-pointer  sm:gap-2">
-              <img
-                src={user?.img || "/default-avatar.png"}
-                onClick={() => navigate("/profile")}
-                alt="Profile"
-                className="h-11 w-11 shrink-0 rounded-full border border-gray-300 object-cover sm:h-16 sm:w-16"
-              />
-
-              <div className="min-w-0 ">
-                <h1 className="truncate text-[13px] font-semibold sm:text-lg">
-                  {user?.username || "User"}
-                </h1>
-                <p className="truncate text-sm text-gray-500">
-                  {user?.nickname}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="space-y-3 pt-3 mt-3 border-t border-slate-100 dark:border-surface-darkBorder shrink-0"></div>
     </aside>
   );
 }

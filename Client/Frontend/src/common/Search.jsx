@@ -38,7 +38,6 @@ export default function SearchModal() {
   const [activeFilter, setActiveFilter] = useState("all"); // 'all' | 'students' | 'doubts' | 'posts' | 'communities' | 'resources'
   const inputRef = useRef(null);
 
-  // useEffect jo modal khulne par input ko focus karega aur band hone par reset karega
   useEffect(() => {
     if (isSearchModalOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -163,7 +162,7 @@ export default function SearchModal() {
                   <X className="w-4 h-4" />
                 </button>
               ) : (
-                <kbd className="hidden sm:inline-block text-[11px] font-mono px-2 py-1 bg-slate-100 dark:bg-surface-darkBorder rounded-lg text-ink-faint">
+                <kbd className="hidden sm:inline-block text-[11px] fonta-mono px-2 py-1 bg-slate-100 dark:bg-surface-darkBorder rounded-lg text-ink-faint">
                   ESC
                 </kbd>
               )}
@@ -286,7 +285,7 @@ export default function SearchModal() {
                                     e.target.src =
                                       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
                                   }}
-                                  className="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-surface-darkBorder flex-shrink-0"
+                                  className="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-surface-darkBorder shrink-0"
                                 />
                                 <div>
                                   <h5 className="text-sm font-semibold text-ink dark:text-slate-100">
