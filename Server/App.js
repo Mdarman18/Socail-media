@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import rateLimit from "express-rate-limit"; // 1. Package import karein
 dotenv.config();
 
 import connectDB from "./src/Connection/connect.js";
@@ -13,7 +14,11 @@ import { postRoute } from "./src/Route/postRoute.js";
 import { messageRoute } from "./src/Route/messageRoute.js";
 import auth from "./src/utlis/verifyUser.js";
 import { specs } from "./src/config/swagger.js";
-import { app } from "./src/socket/socekt.js"; // Socket file se sirf 'app' import karein
+import { app } from "./src/socket/socekt.js";
+import router from "./src/Route/communityRoute.js";
+
+// IMPORTANT FOR CLOUD HOSTING (Render/Vercel)
+app.set("trust proxy", 1);
 
 // Middleware Setup
 app.use(cookieParser());
@@ -34,18 +39,36 @@ app.use(
     extended: true,
   }),
 );
-// =====------ Central MiddleWare ------============
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
+
+// ==================== 2. Rate Limiters Setup ====================
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 150,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
     success: false,
-    message: err.message || "Internal Server Error",
-  });
+    message:
+      "Bahut zyada requests aa gayi hain. Kripya thodi der baad koshish karein.",
+  },
 });
-// Connect DB
+
+const authLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  message: {
+    success: false,
+    message: "Bahut baar galat koshish ki gayi hai. 1 ghante baad try karein.",
+  },
+});
+
+app.use("/api/", globalLimiter);
+
+app.use("/api/user/login", authLimiter);
+app.use("/api/user/signup", authLimiter);
+
 connectDB();
 
-// ===========--------- Routes ---------==================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get("/", (req, res) => {
@@ -56,11 +79,19 @@ app.use("/api/user", userRouter);
 app.use("/api/profile", auth, otherRouter);
 app.use("/api/post", auth, postRoute);
 app.use("/api/message", auth, messageRoute);
-
+app.use("/api/community", router);
 app.get("/me", auth, (req, res) => {
   res.status(200).json({
     success: true,
     user: req.user,
+  });
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
   });
 });
 

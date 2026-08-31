@@ -7,7 +7,7 @@ import GuestRoutes from "./Guestroutes";
 
 // --- Loading Spinner Component for Suspense Fallback ---
 const PageLoader = () => (
-  <div className="flex h-screen w-full items-center justify-center bg-white">
+  <div className="flex h-screen w-full items-center justify-center bg-white dark:bg-surface-darkCard">
     <div className="flex flex-col items-center gap-3">
       <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
       <p className="text-sm font-medium text-gray-500 animate-pulse">
@@ -25,11 +25,13 @@ const Message = lazy(() => import("../pages/Message"));
 const Demo = lazy(() => import("../pages/Home/demo"));
 const Comment = lazy(() => import("../pages/Home/Comment"));
 
+// Capital C rakha hai component naming rule ke mutabiq
+const Community = lazy(() => import("../pages/community/Community"));
+
 const Land = lazy(() => import("../pages/landingPage/Land"));
 const Features = lazy(() => import("../pages/landingPage/Features"));
 const AppLanding = lazy(() => import("../pages/landingPage/App"));
 const About = lazy(() => import("../pages/landingPage/components/About"));
-
 const AuthPage = lazy(() => import("../pages/AuthPage/Auth"));
 
 export const routes = createBrowserRouter([
@@ -70,6 +72,15 @@ export const routes = createBrowserRouter([
             element: (
               <Suspense fallback={<PageLoader />}>
                 <Message />
+              </Suspense>
+            ),
+          },
+          // Naya Community Route add kar diya gaya hai
+          {
+            path: "communities",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <Community />
               </Suspense>
             ),
           },

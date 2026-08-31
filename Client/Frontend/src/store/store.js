@@ -5,6 +5,7 @@ import {
   commentReducer,
   postReducer,
   profileReducers,
+  communityReducer,
   studySharpReducer, // ✅ StudySharp reducer import kiya
 } from "./CreateSlice";
 
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   profile: profileReducers,
   message: messageReducer,
   comment: commentReducer,
+  community: communityReducer,
   studysharp: studySharpReducer, // ✅ StudySharp reducer ko rootReducer mein register kar diya
 });
 

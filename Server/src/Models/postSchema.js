@@ -21,6 +21,11 @@ const postSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    community: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Community",
+      default: null,
+    },
     comment: [
       {
         type: mongoose.Schema.Types.ObjectId,

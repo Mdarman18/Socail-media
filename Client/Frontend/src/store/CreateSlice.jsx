@@ -164,16 +164,50 @@ export const { setuserComment, addComment, clearComment, addUpvote } =
 export const commentReducer = commentReducers.reducer;
 
 // ==========================================
-// 🚀 StudySharp State & Slice (Modal & Search Data)
+// 🚀 Community Slice (Alag kiya gaya naya slice)
+// ==========================================
+const initialCommunityState = {
+  communities: [],
+  loading: false,
+  error: null,
+};
+
+const communitySlice = createSlice({
+  name: "community",
+  initialState: initialCommunityState,
+  reducers: {
+    setCommunities: (state, action) => {
+      state.communities = action.payload;
+    },
+    addCommunity: (state, action) => {
+      state.communities.unshift(action.payload);
+    },
+    joinCommunitySuccess: (state, action) => {
+      const updatedCommunity = action.payload;
+      const index = state.communities.findIndex(
+        (comm) => comm._id === updatedCommunity._id,
+      );
+      if (index !== -1) {
+        state.communities[index] = updatedCommunity;
+      }
+    },
+  },
+});
+
+export const { setCommunities, addCommunity, joinCommunitySuccess } =
+  communitySlice.actions;
+export const communityReducer = communitySlice.reducer;
+
+// ==========================================
+// 🚀 StudySharp State & Slice (Modals & Search Data)
 // ==========================================
 const initialStudySharpState = {
   isSearchModalOpen: false,
-  isCreateModalOpen: false, // ✅ Added
-  isStudyModalOpen: false, // ✅ Added
-  isHelpModalOpen: false, // ✅ Added
+  isCreateModalOpen: false,
+  isStudyModalOpen: false,
+  isHelpModalOpen: false,
   students: [],
   doubts: [],
-  communities: [],
   resources: [],
 };
 
@@ -185,15 +219,12 @@ const studySharpSlice = createSlice({
       state.isSearchModalOpen = action.payload;
     },
     setIsCreateModalOpen: (state, action) => {
-      // ✅ Added
       state.isCreateModalOpen = action.payload;
     },
     setIsStudyModalOpen: (state, action) => {
-      // ✅ Added
       state.isStudyModalOpen = action.payload;
     },
     setIsHelpModalOpen: (state, action) => {
-      // ✅ Added
       state.isHelpModalOpen = action.payload;
     },
     setStudents: (state, action) => {
@@ -201,9 +232,6 @@ const studySharpSlice = createSlice({
     },
     setDoubts: (state, action) => {
       state.doubts = action.payload;
-    },
-    setCommunities: (state, action) => {
-      state.communities = action.payload;
     },
     setResources: (state, action) => {
       state.resources = action.payload;
@@ -213,12 +241,11 @@ const studySharpSlice = createSlice({
 
 export const {
   setIsSearchModalOpen,
-  setIsCreateModalOpen, // ✅ Exported
-  setIsStudyModalOpen, // ✅ Exported
-  setIsHelpModalOpen, // ✅ Exported
+  setIsCreateModalOpen,
+  setIsStudyModalOpen,
+  setIsHelpModalOpen,
   setStudents,
   setDoubts,
-  setCommunities,
   setResources,
 } = studySharpSlice.actions;
 
@@ -230,7 +257,8 @@ export const selectSearchModalOpen = (state) =>
 export const selectStudents = (state) => state.studysharp.students;
 export const selectDoubts = (state) => state.studysharp.doubts;
 export const selectPosts = (state) => state.post.userPosts;
-export const selectCommunities = (state) => state.studysharp.communities;
+// Updated selector source from studysharp to community slice
+export const selectCommunities = (state) => state.community.communities;
 export const selectResources = (state) => state.studysharp.resources;
 
 export const selectCreateModalOpen = (state) =>

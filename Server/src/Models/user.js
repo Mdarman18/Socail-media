@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -9,7 +10,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-
       required: true,
       unique: true,
       trim: true,
@@ -20,12 +20,10 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       default: null,
     },
-
     googleId: {
       type: String,
       default: null,
     },
-
     githubId: {
       type: String,
       default: null,
@@ -81,6 +79,15 @@ const userSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    // ==========================================
+    // Naya field: User kaun-kaun si community ka member hai
+    communities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
+      },
+    ],
+    // ==========================================
     currentStreak: {
       type: Number,
       default: 0,
@@ -94,7 +101,6 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
   },
-
   { timestamps: true },
 );
 
