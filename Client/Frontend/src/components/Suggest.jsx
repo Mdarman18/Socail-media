@@ -18,7 +18,6 @@ const Suggest = () => {
       const res = await profileUrl.get("/getSuggestion");
       setUser(res.data.users);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false); // success ho ya fail, aakhir mein false
     }

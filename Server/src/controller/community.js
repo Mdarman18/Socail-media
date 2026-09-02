@@ -134,3 +134,31 @@ export const getCommunityPosts = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getCommunityDetails = async (req, res, next) => {
+  try {
+    const communityId = req.params.id;
+
+  
+    const community = await Community.findById(communityId)
+      .populate("creator", "username img")
+      .populate("members", "username img");
+
+    if (!community) {
+      throw new customError("Community nahi mili!", 404);
+    }
+
+    // Is community ke andar kitni posts hain uska count nikalna
+    const postsCount = await Post.countDocuments({ community: communityId });
+
+    res.status(200).json({
+      success: true,
+      community: {
+        ...community.toObject(),
+        postsCount,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

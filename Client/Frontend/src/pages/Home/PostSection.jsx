@@ -108,7 +108,6 @@ export const PostSection = () => {
       const posts = await getAllPosts();
       dispatch(setPosts(posts));
     } catch (error) {
-      console.log("Get Post Error:", error);
       toast.error(error.response?.data?.message || "Failed to load posts");
     } finally {
       setLoading(false);

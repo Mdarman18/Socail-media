@@ -118,8 +118,6 @@ const CreatePost = ({ isOpen, setIsopen }) => {
       // Close modal
       setIsopen(false);
     } catch (error) {
-      console.log(error);
-
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       // Whether success or error

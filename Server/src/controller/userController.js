@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import { User } from "../Models/user.js";
 import customError from "../utlis/errorHandling.js";
 
-console.log(process.env.JWT_SECRET);
-
 // ===================== SIGNUP =====================
 export const handleSignup = async (req, res, next) => {
   try {

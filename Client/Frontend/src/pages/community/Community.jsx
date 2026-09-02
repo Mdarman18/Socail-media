@@ -14,6 +14,7 @@ export default function Community() {
   const dispatch = useDispatch();
   const { communities } = useSelector((state) => state.community);
 
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -219,7 +220,7 @@ export default function Community() {
       ) : filteredCommunities.length === 0 ? (
         <div className="text-center py-16 bg-slate-50 dark:bg-[#121826]/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
           <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
-            Koi community nahi mili. 
+            Koi community nahi mili.
           </p>
           <p className="text-xs text-slate-400 mt-1">
             Pehli community khud create karein aur doston ko jodein!
@@ -229,6 +230,7 @@ export default function Community() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredCommunities.map((community) => (
             <CommunityCard
+            
               key={community._id || community.id}
               community={community}
             />

@@ -4,6 +4,7 @@ import auth from "../utlis/verifyUser.js";
 import {
   createCommunity,
   getAllCommunities,
+  getCommunityDetails,
   getCommunityPosts,
   joinCommunity,
 } from "../controller/community.js";
@@ -127,5 +128,30 @@ router.post("/join/:id", auth, joinCommunity);
  *         description: Unauthorized
  */
 router.get("/:id/posts", auth, getCommunityPosts);
+
+/**
+ * @swagger
+ * /api/community/{id}:
+ *   get:
+ *     summary: Get details and content of a specific community
+ *     tags: [Community]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Community ID
+ *     responses:
+ *       200:
+ *         description: Community details retrieved successfully
+ *       404:
+ *         description: Community not found
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/:id", auth, getCommunityDetails); // <-- Naya Route add kiya gaya hai
 
 export default router;

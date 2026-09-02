@@ -18,7 +18,6 @@ export const createCommunityService = async (communityData) => {
 export const getAllCommunitiesService = async () => {
   try {
     const response = await communityUrl.get("/all");
-    console.log("res.data.....", response.data);
     return response.data;
   } catch (error) {
     throw (
@@ -29,6 +28,7 @@ export const getAllCommunitiesService = async () => {
   }
 };
 
+// 3. Community Join Karna
 export const joinCommunityService = async (communityId) => {
   try {
     const response = await communityUrl.post(`/join/${communityId}`);
@@ -51,6 +51,20 @@ export const getCommunityPostsService = async (communityId) => {
     throw (
       error.response?.data || {
         message: "Community posts fetch karne mein error aayi!",
+      }
+    );
+  }
+};
+
+// 5. Kisi specific Community ki details aur content fetch karna
+export const getCommunityDetailsService = async (communityId) => {
+  try {
+    const response = await communityUrl.get(`/${communityId}`);
+    return response.data;
+  } catch (error) {
+    throw (
+      error.response?.data || {
+        message: "Community details fetch karne mein error aayi!",
       }
     );
   }

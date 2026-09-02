@@ -137,7 +137,6 @@ const BasicOnlineCount = () => {
       const res = await profileUrl.get("/getSuggestion");
       setUsers(res.data.users || []);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoadingUsers(false);
     }
@@ -156,7 +155,6 @@ const BasicOnlineCount = () => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
   allMessages.map((msg) => {
-    console.log("timing", msg?.createdAt); // Yeh sahi tarika hai
     // ...
   });
 

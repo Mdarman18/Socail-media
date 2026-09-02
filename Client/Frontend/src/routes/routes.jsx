@@ -28,6 +28,9 @@ const Comment = lazy(() => import("../pages/Home/Comment"));
 // Capital C rakha hai component naming rule ke mutabiq
 const Community = lazy(() => import("../pages/community/Community"));
 
+const CommunityDetails = lazy(
+  () => import("../pages/community/CommunityDetalis"),
+);
 const Land = lazy(() => import("../pages/landingPage/Land"));
 const Features = lazy(() => import("../pages/landingPage/Features"));
 const AppLanding = lazy(() => import("../pages/landingPage/App"));
@@ -89,6 +92,14 @@ export const routes = createBrowserRouter([
             element: (
               <Suspense fallback={<PageLoader />}>
                 <Demo />
+              </Suspense>
+            ),
+          },
+          {
+            path: "community/:id",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <CommunityDetails />
               </Suspense>
             ),
           },

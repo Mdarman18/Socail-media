@@ -49,7 +49,6 @@ export default function TopNavbar() {
   );
 
   const isSearch = useSelector(selectSearchModalOpen);
-  console.log("selectSearchModelOpen :-", isSearch);
 
   return (
     <header className="sticky hidden sm:block top-0 z-20 w-full bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-slate-200/80 dark:border-surface-darkBorder px-4 sm:px-6 py-3 transition-colors">

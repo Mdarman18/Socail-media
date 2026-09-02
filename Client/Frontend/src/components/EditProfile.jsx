@@ -69,11 +69,9 @@ export default function EditProfile({ edit, setEdit }) {
       const res = await profileUrl.post("/edit", data);
       toast.success(res.data.message);
       dispatch(loginSuccess(res.data.user));
-   
+
       setEdit(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   // 14 Important Places List
   const places = [

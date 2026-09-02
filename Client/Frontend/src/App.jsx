@@ -16,7 +16,6 @@ const App = () => {
         const res = await verifyMe.get("/me", {
           withCredentials: true,
         });
-        console.log("sucessss");
       } catch (error) {
         if (error.response?.status === 401) {
           dispatch(logout());

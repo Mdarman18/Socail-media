@@ -68,7 +68,6 @@ const Profile = () => {
       // API se data aane ke baad Redux store mein posts save kar rahe hain
       dispatch(setPosts(res?.data?.posts || []));
     } catch (error) {
-      console.log("API error while fetching posts:", error);
       dispatch(setPosts([]));
     } finally {
       setLoadingActivity(false);
