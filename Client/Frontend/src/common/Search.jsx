@@ -140,7 +140,7 @@ export default function SearchModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl bg-white dark:bg-surface-darkCard border border-slate-200 dark:border-surface-darkBorder rounded-3xl shadow-2xl overflow-hidden z-10"
+            className="relative w-full max-w-2xl bg-slate-700 sm:bg-white dark:bg-surface-darkCard border border-slate-200 dark:border-surface-darkBorder rounded-3xl shadow-2xl overflow-hidden z-10"
           >
             {/* Search Input Bar */}
             <div className="flex items-center px-5 py-4 border-b border-slate-100 dark:border-surface-darkBorder">

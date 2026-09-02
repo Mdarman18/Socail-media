@@ -24,18 +24,8 @@ import {
   selectCreateModalOpen,
   selectStudyModalOpen,
   selectHelpModalOpen,
+  logout,
 } from "../../store/CreateSlice";
-
-// import {
-//   setIsSearchModalOpen,
-//   setIsCreateModalOpen,
-//   setIsStudyModalOpen,
-//   setIsHelpModalOpen,
-//   selectSearchModalOpen,
-//   selectCreateModalOpen,
-//   selectStudyModalOpen,
-//   selectHelpModalOpen,
-// } from ""; // Apna sahi path dein
 
 export default function TopNavbar() {
   const dispatch = useDispatch();
@@ -122,14 +112,12 @@ export default function TopNavbar() {
               onClick={() => setIsProfileMenuOpen((prev) => !prev)}
               className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-surface-darkBorder transition-colors cursor-pointer"
             >
-              {/* Avatar ki jagah standard <img> tag */}
               <div className="relative w-8 h-8 rounded-full overflow-hidden border border-slate-300 dark:border-slate-700">
                 <img
                   src={user?.img || "https://via.placeholder.com/150"}
                   alt={user?.name || "User"}
                   className="w-full h-full object-cover"
                 />
-                {/* Online Status Dot */}
                 <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-surface-dark" />
               </div>
               <ChevronDown className="w-3.5 h-3.5 text-ink-faint hidden sm:block" />
@@ -224,6 +212,7 @@ export default function TopNavbar() {
                       type="button"
                       onClick={() => {
                         setIsProfileMenuOpen(false);
+                        dispatch(logout());
                         navigate("/login");
                       }}
                       className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-left"

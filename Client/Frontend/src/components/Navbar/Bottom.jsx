@@ -16,7 +16,7 @@ export default function BottomNav() {
   );
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-200 dark:bg-surface-dark/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-surface-darkBorder px-3 py-2 flex items-center justify-around select-none">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-blue-300 dark:bg-surface-dark/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-surface-darkBorder px-3 py-2 flex items-center justify-around select-none">
       {/* Home */}
       <NavLink
         to="/"

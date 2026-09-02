@@ -18,7 +18,7 @@ export const createCommunityService = async (communityData) => {
 export const getAllCommunitiesService = async () => {
   try {
     const response = await communityUrl.get("/all");
-    console.log(response.data);
+    console.log("res.data.....", response.data);
     return response.data;
   } catch (error) {
     throw (
