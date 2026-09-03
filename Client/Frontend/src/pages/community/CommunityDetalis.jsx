@@ -70,7 +70,7 @@ export default function CommunityDetail() {
   // Loading state view
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-100">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
       </div>
     );
@@ -79,7 +79,7 @@ export default function CommunityDetail() {
   // Not found fallback view
   if (!community) {
     return (
-      <div className="py-20 text-center space-y-4">
+      <div className="py-20 px-4 text-center space-y-4">
         <h3 className="font-bold text-xl text-gray-900 dark:text-slate-100">
           Community Not Found
         </h3>
@@ -102,20 +102,20 @@ export default function CommunityDetail() {
   const communityStudents = community.members || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 pb-12 max-w-7xl mx-auto px-3 sm:px-6">
       {/* Back Link */}
       <button
         type="button"
         onClick={() => navigate("/communities")}
-        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer pt-2"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>All Communities</span>
       </button>
 
       {/* Community Banner & Header */}
-      <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm">
-        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-slate-900">
+      <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
+        <div className="relative h-36 sm:h-52 w-full overflow-hidden bg-slate-900">
           <img
             src={community.banner || community.img}
             alt={community.name}
@@ -124,29 +124,30 @@ export default function CommunityDetail() {
           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
         </div>
 
-        <div className="px-6 pb-6 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-10 mb-4">
-            <div className="flex items-end gap-4">
-              <div className="w-20 h-20 rounded-3xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center font-bold text-2xl text-indigo-600 border-4 border-white dark:border-slate-800">
+        <div className="px-4 sm:px-6 pb-6 pt-0 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-8 sm:-mt-10 mb-4">
+            <div className="flex items-end gap-3 sm:gap-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center font-bold text-xl sm:text-2xl text-indigo-600 border-4 border-white dark:border-slate-800 shrink-0">
                 {community.iconSvg || "⚡"}
               </div>
-              <div className="pb-1">
+              <div className="pb-1 min-w-0">
                 <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300 mb-1">
                   {community.category || "General"}
                 </span>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
+                <h1 className="text-lg sm:text-2xl font-extrabold text-gray-900 dark:text-white truncate">
                   {community.name}
                 </h1>
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5">
+            {/* Action Buttons (Stack on extra small screens, row on sm+) */}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 onClick={handleJoin}
                 disabled={joining}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                   isMember
-                    ? "border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50"
+                    ? "border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700"
                     : "bg-indigo-600 text-white hover:bg-indigo-700"
                 }`}
               >
@@ -158,10 +159,10 @@ export default function CommunityDetail() {
               </button>
               <button
                 onClick={() => toast("Post feature coming soon!")}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-xl text-sm font-semibold hover:bg-gray-200"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-gray-200 dark:hover:bg-slate-600"
               >
                 <Plus className="w-4 h-4" />
-                Post in Hub
+                <span>Post in Hub</span>
               </button>
             </div>
           </div>
@@ -170,7 +171,7 @@ export default function CommunityDetail() {
             {community.description}
           </p>
 
-          <div className="flex items-center gap-4 text-xs font-semibold text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-semibold text-gray-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
               <Users className="w-4 h-4 text-indigo-600" />
               <b>{community.members ? community.members.length : 0}</b> members
@@ -187,8 +188,8 @@ export default function CommunityDetail() {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex border-b border-gray-200 dark:border-slate-700 gap-6">
+      {/* Tabs Navigation (Scrollable horizontally on small screens) */}
+      <div className="flex overflow-x-auto scrollbar-none border-b border-gray-200 dark:border-slate-700 gap-4 sm:gap-6 no-scrollbar">
         {[
           { id: "feed", label: "Feed & Posts", count: communityPosts.length },
           {
@@ -207,7 +208,7 @@ export default function CommunityDetail() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
+            className={`pb-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
                 ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
                 : "border-transparent text-gray-500 hover:text-gray-700 dark:text-slate-400"
@@ -233,7 +234,7 @@ export default function CommunityDetail() {
               </div>
             ))
           ) : (
-            <div className="p-12 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-200 dark:border-slate-700">
+            <div className="p-8 sm:p-12 text-center bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-gray-200 dark:border-slate-700">
               <h4 className="font-bold text-base text-gray-900 dark:text-slate-100 mb-1">
                 No posts in this community yet
               </h4>
@@ -266,7 +267,7 @@ export default function CommunityDetail() {
               </div>
             ))
           ) : (
-            <div className="p-12 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-200 dark:border-slate-700">
+            <div className="p-8 sm:p-12 text-center bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-gray-200 dark:border-slate-700">
               <h4 className="font-bold text-base text-gray-900 dark:text-slate-100 mb-1">
                 No active questions in this hub
               </h4>
@@ -299,7 +300,7 @@ export default function CommunityDetail() {
               </div>
             ))
           ) : (
-            <div className="col-span-full p-12 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-200 dark:border-slate-700">
+            <div className="col-span-full p-8 sm:p-12 text-center bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-gray-200 dark:border-slate-700">
               <h4 className="font-bold text-base text-gray-900 dark:text-slate-100 mb-1">
                 No uploaded resources yet
               </h4>
@@ -319,26 +320,28 @@ export default function CommunityDetail() {
 
       {/* Tab Content: Members */}
       {activeTab === "members" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {communityStudents.length > 0 ? (
             communityStudents.map((student) => (
               <div
                 key={student.id || student._id}
-                className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 flex items-center gap-3"
+                className="p-3 sm:p-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 flex items-center gap-3"
               >
-                <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">
                   {student.name ? student.name.charAt(0) : "U"}
                 </div>
-                <div>
-                  <h5 className="text-sm font-bold text-gray-900 dark:text-slate-100">
+                <div className="min-w-0">
+                  <h5 className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate">
                     {student.name || "User"}
                   </h5>
-                  <p className="text-xs text-gray-500">{student.email || ""}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {student.email || ""}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
-            <div className="col-span-full p-12 text-center bg-white dark:bg-slate-800 rounded-3xl border border-gray-200 dark:border-slate-700">
+            <div className="col-span-full p-8 text-center bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700">
               <p className="text-xs text-gray-500">No members found.</p>
             </div>
           )}
@@ -347,18 +350,18 @@ export default function CommunityDetail() {
 
       {/* Tab Content: About & Rules */}
       {activeTab === "about" && (
-        <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 space-y-6">
+        <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-2">
               About this Community
             </h3>
-            <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-300 leading-relaxed">
               {community.description}
             </p>
           </div>
 
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3">
               Community Guidelines & Rules
             </h3>
             <ul className="space-y-2.5">
@@ -383,10 +386,10 @@ export default function CommunityDetail() {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3">
               Community Moderators
             </h3>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {community.moderators && community.moderators.length > 0 ? (
                 community.moderators.map((mod, idx) => (
                   <span

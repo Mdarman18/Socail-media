@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { messageUrl, profileUrl } from "../api/Axios";
 import { useSocketContext } from "../context/SocketContext";
 import { addMessage, setMessage } from "../store/Message";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaUsers, FaCommentAlt } from "react-icons/fa";
 import { persistor } from "../store/store";
+import { useNavigate } from "react-router-dom";
 
 const BasicOnlineCount = () => {
   const dispatch = useDispatch();
   const { socket } = useSocketContext();
+  const navigate = useNavigate();
 
   const onlineUsers = useSelector((state) => state.message?.onlineUser) || [];
   const allMessages = useSelector((state) => state.message?.message) || [];
@@ -18,6 +20,9 @@ const BasicOnlineCount = () => {
   const [message, setMessageInput] = useState("");
   const [profiles, setProfiles] = useState([]);
   const [users, setUsers] = useState([]);
+
+  // State for mobile view tab switching: "chat" or "community"
+  const [mobileTab, setMobileTab] = useState("chat");
 
   // Loading States
   const [loadingUsers, setLoadingUsers] = useState(true);
@@ -154,9 +159,6 @@ const BasicOnlineCount = () => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
-  allMessages.map((msg) => {
-    // ...
-  });
 
   return (
     <div className="flex flex-col md:flex-row h-[calc(100vh-100px)] w-full overflow-hidden bg-slate-50">
@@ -166,76 +168,180 @@ const BasicOnlineCount = () => {
           selectedUser ? "hidden md:flex" : "flex"
         }`}
       >
-        <div className="border-b border-slate-200 p-3 md:p-4 shrink-0">
-          <h2 className="text-lg md:text-xl font-bold text-slate-800">
-            Messages
-          </h2>
+        {/* Sidebar Header for Desktop Only */}
+        <div className="hidden md:block border-b border-slate-200 p-4 shrink-0">
+          <h2 className="text-xl font-bold text-slate-800">Messages</h2>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 md:p-0 divide-y divide-slate-100">
-          {loadingUsers ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 p-3 animate-pulse"
-              >
-                <div className="h-10 w-10 md:h-11 md:w-11 rounded-full bg-slate-200 shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-slate-200 rounded w-3/4" />
-                  <div className="h-3 bg-slate-200 rounded w-1/2" />
+        {/* Sidebar Header with Chat & Community Toggle Buttons (Visible ONLY on Small Devices using 'flex md:hidden') */}
+        <div className="flex md:hidden border-b border-slate-200 p-2 shrink-0 gap-2 bg-slate-50">
+          <button
+            onClick={() => setMobileTab("chat")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-xs transition ${
+              mobileTab === "chat"
+                ? "bg-violet-600 text-white shadow-sm"
+                : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+            }`}
+          >
+            <FaCommentAlt className="text-xs" />
+            <span>Chat</span>
+          </button>
+
+          <button
+            onClick={() => navigate("/communities")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-xs transition ${
+              mobileTab === "community"
+                ? "bg-violet-600 text-white shadow-sm"
+                : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+            }`}
+          >
+            <FaUsers className="text-sm" />
+            <span>Communities</span>
+          </button>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Mobile view content (controlled by mobileTab state) */}
+          <div className="block md:hidden h-full">
+            {mobileTab === "community" ? (
+              <div className="p-6 text-center">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-violet-100 text-violet-600">
+                  <FaUsers size={22} />
                 </div>
+                <h3 className="font-semibold text-slate-800 text-base">
+                  Communities
+                </h3>
+                <p className="mt-1 text-xs text-slate-400">
+                  Community channels and groups will appear here.
+                </p>
               </div>
-            ))
-          ) : users.length > 0 ? (
-            users.map((profile) => {
-              const isOnline = onlineUsers.includes(profile._id);
-
-              return (
-                <div
-                  key={profile._id}
-                  onClick={() => setSelectedUser(profile)}
-                  className={`flex cursor-pointer items-center gap-3 p-3 md:p-4 transition hover:bg-violet-50 ${
-                    selectedUser?._id === profile._id
-                      ? "bg-violet-50 border-violet-200"
-                      : "bg-white"
-                  }`}
-                >
-                  <div className="relative flex h-10 w-10 md:h-11 md:w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-600 font-bold text-white text-sm">
-                    {profile.img ? (
-                      <img
-                        src={profile.img}
-                        alt={profile.username}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      profile.username?.charAt(0)?.toUpperCase()
-                    )}
-
-                    {isOnline && (
-                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 md:h-3 md:w-3 rounded-full border-2 border-white bg-green-500" />
-                    )}
-                  </div>
-
-                  <div className="min-w-0 flex-1 pr-2">
-                    <h3 className="truncate font-semibold text-slate-800 text-sm md:text-base">
-                      {profile.username}
-                    </h3>
-                    <p
-                      className={`text-xs ${
-                        isOnline ? "text-green-500" : "text-slate-400"
-                      }`}
+            ) : (
+              /* Regular Chat Users List for Mobile */
+              <div className="divide-y divide-slate-100">
+                {loadingUsers ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-3 animate-pulse"
                     >
-                      {isOnline ? "Online" : "Offline"}
-                    </p>
+                      <div className="h-10 w-10 rounded-full bg-slate-200 shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-slate-200 rounded w-3/4" />
+                        <div className="h-3 bg-slate-200 rounded w-1/2" />
+                      </div>
+                    </div>
+                  ))
+                ) : users.length > 0 ? (
+                  users.map((profile) => {
+                    const isOnline = onlineUsers.includes(profile._id);
+                    return (
+                      <div
+                        key={profile._id}
+                        onClick={() => setSelectedUser(profile)}
+                        className={`flex cursor-pointer items-center gap-3 p-3 transition hover:bg-violet-50 ${
+                          selectedUser?._id === profile._id
+                            ? "bg-violet-50"
+                            : "bg-white"
+                        }`}
+                      >
+                        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-600 font-bold text-white text-sm">
+                          {profile.img ? (
+                            <img
+                              src={profile.img}
+                              alt={profile.username}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            profile.username?.charAt(0)?.toUpperCase()
+                          )}
+                          {isOnline && (
+                            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-500" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1 pr-2">
+                          <h3 className="truncate font-semibold text-slate-800 text-sm">
+                            {profile.username}
+                          </h3>
+                          <p
+                            className={`text-xs ${isOnline ? "text-green-500" : "text-slate-400"}`}
+                          >
+                            {isOnline ? "Online" : "Offline"}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="p-4 text-center text-xs text-slate-400 w-full">
+                    No users available
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop view content (Always shows standard users list, no toggle tabs) */}
+          <div className="hidden md:block divide-y divide-slate-100 h-full">
+            {loadingUsers ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 p-4 animate-pulse"
+                >
+                  <div className="h-11 w-11 rounded-full bg-slate-200 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-slate-200 rounded w-3/4" />
+                    <div className="h-3 bg-slate-200 rounded w-1/2" />
                   </div>
                 </div>
-              );
-            })
-          ) : (
-            <div className="p-4 md:p-6 text-center text-xs md:text-sm text-slate-400 w-full">
-              No users available
-            </div>
-          )}
+              ))
+            ) : users.length > 0 ? (
+              users.map((profile) => {
+                const isOnline = onlineUsers.includes(profile._id);
+                return (
+                  <div
+                    key={profile._id}
+                    onClick={() => setSelectedUser(profile)}
+                    className={`flex cursor-pointer items-center gap-3 p-4 transition hover:bg-violet-50 ${
+                      selectedUser?._id === profile._id
+                        ? "bg-violet-50 border-violet-200"
+                        : "bg-white"
+                    }`}
+                  >
+                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-600 font-bold text-white text-sm">
+                      {profile.img ? (
+                        <img
+                          src={profile.img}
+                          alt={profile.username}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        profile.username?.charAt(0)?.toUpperCase()
+                      )}
+                      {isOnline && (
+                        <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1 pr-2">
+                      <h3 className="truncate font-semibold text-slate-800 text-base">
+                        {profile.username}
+                      </h3>
+                      <p
+                        className={`text-xs ${isOnline ? "text-green-500" : "text-slate-400"}`}
+                      >
+                        {isOnline ? "Online" : "Offline"}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="p-6 text-center text-sm text-slate-400 w-full">
+                No users available
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -319,7 +425,7 @@ const BasicOnlineCount = () => {
                             : "border bg-white text-slate-700 shadow-sm"
                         }`}
                       >
-                        <p className="text-sm break-words leading-snug">
+                        <p className="text-sm wrap-break-word leading-snug">
                           {msg.message}
                         </p>
 
@@ -360,7 +466,7 @@ const BasicOnlineCount = () => {
                 <button
                   type="submit"
                   disabled={!message.trim() || isSending}
-                  className="flex items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 min-w-[80px]"
+                  className="flex items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 min-w-20"
                 >
                   {isSending ? (
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />

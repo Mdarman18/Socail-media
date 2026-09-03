@@ -27,7 +27,7 @@ export default function CommunityCard({ community }) {
       </div>
 
       {/* Card Body */}
-      <div className="p-5 flex flex-col flex-grow justify-between">
+      <div className="p-5 flex flex-col grow justify-between">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 transition-colors">
             {community.name}
