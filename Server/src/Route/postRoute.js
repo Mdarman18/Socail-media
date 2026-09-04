@@ -20,7 +20,7 @@ export const postRoute = express.Router();
  * @swagger
  * /api/post/addpost:
  *   post:
- *     summary: Create a new post
+ *     summary: Create a new post (supports text, doubts, resources, study updates with image/pdf)
  *     tags:
  *       - Post
  *     security:
@@ -31,18 +31,60 @@ export const postRoute = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - status
+ *               - subject
  *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [post, doubt, resource, study update]
+ *                 example: post
+ *               description:
+ *                 type: string
+ *                 example: This is a detailed description for the post.
+ *               questionTitle:
+ *                 type: string
+ *                 example: How to reverse a linked list in Java?
+ *               questionExplanation:
+ *                 type: string
+ *                 example: Detailed breakdown of the algorithm approach.
+ *               subject:
+ *                 type: string
+ *                 enum:
+ *                   - "Data Structures & Algorithms"
+ *                   - "Web Development"
+ *                   - "AI & Machine Learning"
+ *                   - "Database Management Systems"
+ *                   - "Computer Networks & Security"
+ *                   - "Cloud & DevOps"
+ *                   - "Competitive Programming"
+ *                   - "General Computer Science"
+ *                   - "other"
+ *                 example: Web Development
+ *               codeDetails:
+ *                 type: string
+ *                 example: console.log("Hello World");
+ *               codeType:
+ *                 type: string
+ *                 enum: [Java, Python, JavaScript, sql]
+ *                 example: JavaScript
  *               caption:
  *                 type: string
  *                 example: My first social media post 🚀
+ *               tags:
+ *                 type: string
+ *                 example: javascript, react, webdev
  *               img:
+ *                 type: string
+ *                 format: binary
+ *               pdf:
  *                 type: string
  *                 format: binary
  *     responses:
  *       201:
  *         description: Post created successfully
  *       400:
- *         description: Image required
+ *         description: Validation error or missing required fields
  */
 postRoute.post("/addpost", upload.single("img"), addPost);
 
@@ -95,6 +137,7 @@ postRoute.get("/getuserpost", getUserKapost);
  *         description: Post liked successfully
  */
 postRoute.post("/like/:id", Like);
+
 /**
  * @swagger
  * /api/post/dislike/{id}:
@@ -113,9 +156,10 @@ postRoute.post("/like/:id", Like);
  *           example: 6890d3e9c4a12b4e7f12345
  *     responses:
  *       200:
- *         description: Post liked successfully
+ *         description: Post unliked successfully
  */
 postRoute.post("/dislike/:id", Dislike);
+
 /**
  * @swagger
  * /api/post/addcomment/{id}:
@@ -211,11 +255,12 @@ postRoute.delete("/deletepost/:id", DeletePost);
  *         description: Bookmark updated successfully
  */
 postRoute.post("/bookmarked/:id", savedPost);
+
 /**
  * @swagger
  * /api/post/upvote/{id}:
  *   post:
- *     summary: Upvote a post
+ *     summary: Upvote a comment
  *     tags:
  *       - Post
  *     security:
@@ -229,7 +274,7 @@ postRoute.post("/bookmarked/:id", savedPost);
  *           example: 6890d3e9c4a12b4e7f12345
  *     responses:
  *       200:
- *         description: Post upvoted successfully
+ *         description: Comment upvoted successfully
  */
 postRoute.post("/upvote/:id", handleUpvote);
 
@@ -237,7 +282,7 @@ postRoute.post("/upvote/:id", handleUpvote);
  * @swagger
  * /api/post/downvote/{id}:
  *   post:
- *     summary: Downvote a post
+ *     summary: Downvote a comment
  *     tags:
  *       - Post
  *     security:
@@ -251,6 +296,6 @@ postRoute.post("/upvote/:id", handleUpvote);
  *           example: 6890d3e9c4a12b4e7f12345
  *     responses:
  *       200:
- *         description: Post downvoted successfully
+ *         description: Comment downvoted successfully
  */
 postRoute.post("/downvote/:id", handleDownvote);

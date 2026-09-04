@@ -8,76 +8,95 @@ import customError from "../utlis/errorHandling.js";
 // ===================== ADD POST =====================
 export const addPost = async (req, res, next) => {
   try {
-    const id = req.user.id;
-    const img = req.file;
-    const { caption } = req.body;
+    const userId = req.user.id;
+    const file = req.file;
 
-    // 1. Validation: File check
-    if (!img) {
-      throw new customError("Image is required..", 400);
-    }
+    const {
+      status,
+      description,
+      questionTitle,
+      questionExplanation,
+      subject,
+      codeDetails,
+      codeType,
+      caption,
+      community,
+      tags,
+    } = req.body;
 
-    // 2. Validation: User check
-    const user = await User.findById(id);
+    // 1. User check
+    const user = await User.findById(userId);
     if (!user) {
       throw new customError("User not found..", 404);
     }
 
-    // 3. Image Optimization with Sharp / PDF Upload
     let pdfUrl = "";
     let imgUrl = "";
-    const type = img.mimetype;
 
-    if (type === "application/pdf") {
-      const fileUri = `data:application/pdf;base64,${img.buffer.toString("base64")}`;
+    // 2. File Upload Handling (Image or PDF)
+    if (file) {
+      const mimeType = file.mimetype;
 
-      const cloudResponse = await cloudinary.uploader.upload(fileUri, {
-        resource_type: "raw",
-        folder: "posts/pdfs",
-        public_id: `${Date.now()}-${img.originalname.replace(/\.pdf$/i, "")}.pdf`,
-      });
+      if (mimeType === "application/pdf") {
+        const fileUri = `data:application/pdf;base64,${file.buffer.toString("base64")}`;
 
-      pdfUrl = cloudResponse.secure_url;
-    } else {
-      const optimizedBuffer = await sharp(img.buffer)
-        .resize({
-          width: 800,
-          height: 800,
-          fit: "inside",
-        })
-        .toFormat("jpeg", { quality: 80 })
-        .toBuffer();
+        const cloudResponse = await cloudinary.uploader.upload(fileUri, {
+          resource_type: "raw",
+          folder: "posts/pdfs",
+          public_id: `${Date.now()}-${file.originalname.replace(/\.pdf$/i, "")}.pdf`,
+        });
 
-      const fileUri = `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`;
-      const cloudResponse = await cloudinary.uploader.upload(fileUri);
-      imgUrl = cloudResponse.secure_url;
+        pdfUrl = cloudResponse.secure_url;
+      } else {
+        const optimizedBuffer = await sharp(file.buffer)
+          .resize({
+            width: 800,
+            height: 800,
+            fit: "inside",
+          })
+          .toFormat("jpeg", { quality: 80 })
+          .toBuffer();
+
+        const fileUri = `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`;
+        const cloudResponse = await cloudinary.uploader.upload(fileUri);
+        imgUrl = cloudResponse.secure_url;
+      }
     }
 
-    // 4. Database me Post Create karna
+    // 4. Create Post in Database
     const post = await Post.create({
-      caption,
+      status,
+      description,
+      questionTitle,
+      questionExplanation,
+      subject,
+      codeDetails,
+      codeType,
+      caption: caption || "",
       img: imgUrl,
       pdf: pdfUrl,
-      author: id,
+      author: userId,
+      community: community || null,
+      tags: tags,
     });
 
     user.post.push(post._id);
     await user.save();
+
     await post.populate("author", "-password");
 
-    // 5. Successful Response Send karna
+    // 5. Send Response
     return res.status(201).json({
       success: true,
       message: "Post created successfully!",
       post,
-      user,
     });
   } catch (error) {
     return next(error);
   }
 };
 
-// ===================== GET USER PROFILE POSTS =====================
+// ===================== GET ALL POSTS =====================
 export const getUserProfile = async (req, res, next) => {
   try {
     const posts = await Post.find()
@@ -85,7 +104,7 @@ export const getUserProfile = async (req, res, next) => {
       .populate({ path: "author", select: "username img" })
       .populate({
         path: "comment",
-        sort: { createdAt: -1 },
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "author",
           select: "username img",
@@ -111,7 +130,7 @@ export const getUserKapost = async (req, res, next) => {
       .populate({ path: "author", select: "username img" })
       .populate({
         path: "comment",
-        sort: { createdAt: -1 },
+        options: { sort: { createdAt: -1 } },
         populate: {
           path: "author",
           select: "username img",

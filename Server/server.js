@@ -6,4 +6,6 @@ import { server } from "./src/socket/socekt.js";
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {});
+server.listen(PORT, () => {
+  console.log(`Server is running successfully on port ${PORT}`);
+});

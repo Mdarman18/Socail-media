@@ -132,7 +132,7 @@ export default function Sidebar() {
         </div>
 
         {/* Main Navigation Links with Scroll enabled */}
-        <nav className="space-y-2 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 flex-1">
+        <nav className="space-y-4 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 flex-1">
           {navItems.map((item) => {
             const isActive =
               location.pathname === item.path ||
@@ -167,8 +167,6 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Bottom Section: Mini Timer Widget & User Profile/Actions */}
-      <div className="space-y-3 pt-3 mt-3 border-t border-slate-100 dark:border-surface-darkBorder shrink-0"></div>
     </aside>
   );
 }

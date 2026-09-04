@@ -16,6 +16,26 @@ const initialAuthState = {
   loading: false,
   error: null,
 };
+const initialState = {
+  isCreateModalOpen: false, // Yeh state check karegi ki modal open hai ya nahi
+};
+
+export const createPostSlice = createSlice({
+  name: "createModel",
+  initialState,
+  reducers: {
+    openCreateModal: (state) => {
+      state.isCreateModalOpen = true;
+    },
+    // Modal band karne ke liye
+    closeCreateModal: (state) => {
+      state.isCreateModalOpen = false;
+    },
+  },
+});
+
+export const { openCreateModal, closeCreateModal } = createPostSlice.actions;
+export const createModelReducer = createPostSlice.reducer;
 
 // Auth Slice
 export const authSlice = createSlice({

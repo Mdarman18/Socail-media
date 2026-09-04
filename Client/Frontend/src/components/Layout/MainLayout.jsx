@@ -6,6 +6,7 @@ import Footer from "../Footer";
 import TopNavbar from "../Navbar/Topbar";
 import SearchModal from "../../common/Search";
 import BottomNav from "../Navbar/Bottom";
+import CreatePostModal from "../../common/PostModel";
 
 export default function AppLayout() {
   return (
@@ -22,6 +23,7 @@ export default function AppLayout() {
         <BottomNav />
       </div>
       <SearchModal />
+      <CreatePostModal />
     </div>
   );
 }

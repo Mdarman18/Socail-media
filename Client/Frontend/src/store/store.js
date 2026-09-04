@@ -6,7 +6,7 @@ import {
   postReducer,
   profileReducers,
   communityReducer,
-  studySharpReducer, // ✅ StudySharp reducer import kiya
+  studySharpReducer,
 } from "./CreateSlice";
 
 import storageModule from "redux-persist/lib/storage";
@@ -29,7 +29,7 @@ const rootReducer = combineReducers({
   message: messageReducer,
   comment: commentReducer,
   community: communityReducer,
-  studysharp: studySharpReducer, // ✅ StudySharp reducer ko rootReducer mein register kar diya
+  studysharp: studySharpReducer,
 });
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);
