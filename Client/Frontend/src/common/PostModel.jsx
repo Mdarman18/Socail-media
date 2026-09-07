@@ -17,7 +17,9 @@ import {
 import {
   selectCreateModalOpen,
   setIsCreateModalOpen,
+  addPost as addPostToStore, // 👈 naya import: slice action (naam clash avoid karne ke liye alias)
 } from "../store/CreateSlice";
+import { addPost } from "../Service/postService";
 
 const CHAR_LIMIT = 1000;
 const RESOURCE_ACCEPT = ".pdf,image/*";
@@ -35,6 +37,10 @@ export default function CreatePostModal() {
 
   const [createModalTab, setCreateModalTab] = useState("post");
   const [showCodeSnippet, setShowCodeSnippet] = useState(false);
+
+  // --- ADDED MISSING STATES HERE ---
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // --- SCHEMA ACCORDING STATES ---
   const [status, setStatus] = useState("post");
@@ -56,6 +62,7 @@ export default function CreatePostModal() {
   const resourceInputRef = useRef(null);
 
   const handleClose = () => {
+    if (loading) return; // Prevent closing while submitting
     dispatch(setIsCreateModalOpen(false));
   };
 
@@ -73,6 +80,8 @@ export default function CreatePostModal() {
       setSubject("Data Structures & Algorithms");
       setImagePreview(null);
       setResourceFile(null);
+      setErrorMessage("");
+      setLoading(false);
     }
   }, [isOpen]);
 
@@ -89,7 +98,7 @@ export default function CreatePostModal() {
     const onKey = (e) => e.key === "Escape" && handleClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen]);
+  }, [isOpen, loading]);
 
   const handleImagePick = (e) => {
     const file = e.target.files?.[0];
@@ -132,7 +141,8 @@ export default function CreatePostModal() {
     setResourceFromFile(e.dataTransfer.files?.[0]);
   };
 
-  const handlePreparePost = () => {
+  const handlePreparePost = async () => {
+    setErrorMessage("");
     const finalPostData = {
       status,
       description,
@@ -146,8 +156,27 @@ export default function CreatePostModal() {
       pdf: resourceFile ? resourceFile.name : null,
     };
 
-    console.log("Schema Matched Payload for API:", finalPostData);
-    dispatch(setIsCreateModalOpen(false));
+    try {
+      setLoading(true);
+
+      // YAHAN AAPKA API CALL HO RAHA HAI 🚀
+      const newPost = await addPost(finalPostData);
+
+      console.log("Post created successfully:", newPost);
+
+      dispatch(addPostToStore(newPost)); // 👈 naya dispatch — response redux store mein add
+
+      // Modal band karne ke liye
+      dispatch(setIsCreateModalOpen(false));
+    } catch (error) {
+      console.error("Failed to create post:", error);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const tabs = [
@@ -190,7 +219,7 @@ export default function CreatePostModal() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed  inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -212,9 +241,10 @@ export default function CreatePostModal() {
             {/* Close button */}
             <button
               onClick={handleClose}
+              disabled={loading}
               className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full
                          text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 
-                         hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                         hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50"
             >
               <X className="w-5 h-5" />
             </button>
@@ -228,6 +258,13 @@ export default function CreatePostModal() {
                 Share what you're learning, ask for help, or drop a resource.
               </p>
             </div>
+
+            {/* Error Message Display */}
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-medium">
+                {errorMessage}
+              </div>
+            )}
 
             {/* Tabs - Explicit Background & Contrast Fix */}
             <div
@@ -418,11 +455,12 @@ export default function CreatePostModal() {
 
                   <button
                     type="button"
+                    disabled={loading}
                     onClick={handlePreparePost}
                     className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-xs sm:text-sm
-                               font-semibold hover:bg-brand-600 cursor-pointer shadow-sm"
+                               font-semibold hover:bg-blue-600 cursor-pointer shadow-sm disabled:opacity-50"
                   >
-                    {submitLabel}
+                    {loading ? "Publishing..." : submitLabel}
                   </button>
                 </div>
               </div>
@@ -504,7 +542,7 @@ export default function CreatePostModal() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 rounded-2xl border border-slate-300 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-800/80">
-                      <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center shrink-0">
                         <FileType2 className="w-6 h-6 text-rose-500" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -529,11 +567,12 @@ export default function CreatePostModal() {
                 <div className="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-800">
                   <button
                     type="button"
+                    disabled={loading}
                     onClick={handlePreparePost}
                     className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-xs sm:text-sm
-                               font-semibold hover:bg-brand-600 cursor-pointer shadow-sm"
+                               font-semibold hover:bg-blue-600 cursor-pointer shadow-sm disabled:opacity-50"
                   >
-                    Share Resource
+                    {loading ? "Sharing..." : "Share Resource"}
                   </button>
                 </div>
               </div>
