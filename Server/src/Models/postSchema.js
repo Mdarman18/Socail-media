@@ -79,8 +79,28 @@ const postSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    acceptedAnswer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null,
+    },
+    solved: {
+      type: Boolean,
+      default: false,
+    },
+    solvedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );
+
+postSchema.index({ createdAt: -1 });
+postSchema.index({ author: 1, createdAt: -1 });
+postSchema.index({ community: 1, createdAt: -1 });
+postSchema.index({ status: 1, solved: 1, createdAt: -1 });
+postSchema.index({ subject: 1, status: 1, solved: 1, createdAt: -1 });
+postSchema.index({ tags: 1, createdAt: -1 });
 
 export const Post = mongoose.model("Post", postSchema);

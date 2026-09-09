@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../../assets/logo.png";
-import { setIsSearchModalOpen, logout } from "../../store/CreateSlice";
+import { setIsSearchModalOpen, logout } from "../../store/auth.slice";
 
 export default function MobileNavbar() {
   // Redux state

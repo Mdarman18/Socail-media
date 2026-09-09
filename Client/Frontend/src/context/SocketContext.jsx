@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import io from "socket.io-client";
-import { setonlineUser } from "../store/Message"; // Apne path ke hisab se import karein
+import { setonlineUser } from "../store/message.slice"; // Apne path ke hisab se import karein
 
 const SocketContext = createContext(null);
 
@@ -18,19 +18,15 @@ export const SocketContextProvider = ({ children }) => {
     let socketInstance = null;
 
     if (user?._id) {
-      socketInstance = io("https://socail-media-4.onrender.com", {
-        query: {
-          userId: user._id,
-        },
+      const socketUrl =
+        import.meta.env.VITE_SOCKET_URL ||
+        import.meta.env.VITE_API_BASE_URL ||
+        "http://localhost:4400";
+
+      socketInstance = io(socketUrl, {
+        withCredentials: true,
         transports: ["websocket"],
       });
-      // if (user?._id) {
-      //   socketInstance = io("http://localhost:4400", {
-      //     query: {
-      //       userId: user._id,
-      //     },
-      //     transports: ["websocket"],
-      //   });
 
       setSocket(socketInstance);
 

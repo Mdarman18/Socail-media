@@ -3,9 +3,9 @@ import { FaBell, FaSearch, FaPlus } from "react-icons/fa";
 import { LuLogIn } from "react-icons/lu";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
-import CreatePost from "./CreatePost";
+import CreatePost from "../features/post/CreatePost";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../store/CreateSlice";
+import { logout } from "../store/auth.slice";
 import studySharpImage from "../assets/logo.png";
 import { NavbarData } from "../data/data"; // Apna data path yahan check kar lena
 

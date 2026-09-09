@@ -7,12 +7,12 @@ import {
   profileReducers,
   communityReducer,
   studySharpReducer,
-} from "./CreateSlice";
+} from "./auth.slice";
 
 import storageModule from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
-import { messageReducer } from "./Message";
+import { messageReducer } from "./message.slice";
 
 const storage = storageModule.default || storageModule;
 

@@ -6,7 +6,7 @@ import Footer from "../Footer";
 import TopNavbar from "../Navbar/Topbar";
 import SearchModal from "../../common/Search";
 import BottomNav from "../Navbar/Bottom";
-import CreatePostModal from "../../common/PostModel";
+import CreatePostModal from "../../features/post/PostModel";
 
 export default function AppLayout() {
   return (

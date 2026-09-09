@@ -3,7 +3,7 @@ import { RouterProvider, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast"; // Agar toast notifications use kar rahe hain
 import { routes } from "./routes/routes";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "./store/CreateSlice";
+import { loginSuccess, logout } from "./store/auth.slice";
 import axios from "axios";
 import { verifyMe } from "./api/Axios";
 
@@ -16,6 +16,9 @@ const App = () => {
         const res = await verifyMe.get("/me", {
           withCredentials: true,
         });
+        if (res.data?.user) {
+          dispatch(loginSuccess(res.data.user));
+        }
       } catch (error) {
         if (error.response?.status === 401) {
           dispatch(logout());

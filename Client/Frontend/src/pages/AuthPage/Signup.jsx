@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import SocialIcons from "./SocialIcons";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../store/CreateSlice";
+import { loginSuccess } from "../../store/auth.slice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../Service/userService";
+import { registerUser } from "../../api/user.api";
 
 const Signup = () => {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Home, Compass, Plus, MessageSquare, User } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsCreateModalOpen } from "../../store/CreateSlice";
+import { setIsCreateModalOpen } from "../../store/auth.slice";
 
 export default function BottomNav() {
   const dispatch = useDispatch();
