@@ -37,10 +37,12 @@ const postSchema = new mongoose.Schema(
     },
     codeDetails: {
       type: String,
+      required: false,
     },
     codeType: {
       type: String,
       enum: ["Java", "Python", "JavaScript", "sql"],
+      required: false,
     },
     caption: {
       type: String,

@@ -17,9 +17,9 @@ import {
 import {
   selectCreateModalOpen,
   setIsCreateModalOpen,
-  addPost as addPostToStore, // 👈 naya import: slice action (naam clash avoid karne ke liye alias)
+  addPost,
 } from "../store/CreateSlice";
-import { addPost } from "../Service/postService";
+import { addPost as addPostApi } from "../Service/postService";
 
 const CHAR_LIMIT = 1000;
 const RESOURCE_ACCEPT = ".pdf,image/*";
@@ -38,11 +38,11 @@ export default function CreatePostModal() {
   const [createModalTab, setCreateModalTab] = useState("post");
   const [showCodeSnippet, setShowCodeSnippet] = useState(false);
 
-  // --- ADDED MISSING STATES HERE ---
+  // --- LOADING & ERROR STATES ---
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // --- SCHEMA ACCORDING STATES ---
+  // --- FORM STATES ---
   const [status, setStatus] = useState("post");
   const [description, setDescription] = useState("");
   const [questionTitle, setQuestionTitle] = useState("");
@@ -62,7 +62,7 @@ export default function CreatePostModal() {
   const resourceInputRef = useRef(null);
 
   const handleClose = () => {
-    if (loading) return; // Prevent closing while submitting
+    if (loading) return;
     dispatch(setIsCreateModalOpen(false));
   };
 
@@ -126,7 +126,7 @@ export default function CreatePostModal() {
         name: file.name,
         size: file.size,
         type: file.type,
-        preview: isImage ? reader.result : null,
+        preview: reader.result,
       });
     };
     reader.readAsDataURL(file);
@@ -143,30 +143,39 @@ export default function CreatePostModal() {
 
   const handlePreparePost = async () => {
     setErrorMessage("");
+
     const finalPostData = {
       status,
-      description,
-      questionTitle,
-      questionExplanation,
       subject,
-      codeDetails,
-      codeType,
-      caption,
-      img: imagePreview,
-      pdf: resourceFile ? resourceFile.name : null,
+      description: createModalTab === "resource" ? caption : description,
+      questionTitle: createModalTab === "doubt" ? questionTitle : "",
+      questionExplanation:
+        createModalTab === "doubt" ? questionExplanation : "",
+      codeDetails: showCodeSnippet ? codeDetails : "",
+      codeType: showCodeSnippet ? codeType : "",
+      caption: createModalTab === "resource" ? caption : "",
+      img:
+        imagePreview ||
+        (createModalTab === "resource" &&
+        resourceFile?.type?.startsWith("image/")
+          ? resourceFile.preview
+          : null),
+      pdf:
+        createModalTab === "resource" &&
+        !resourceFile?.type?.startsWith("image/")
+          ? resourceFile?.preview
+          : null,
     };
 
     try {
       setLoading(true);
 
-      // YAHAN AAPKA API CALL HO RAHA HAI 🚀
-      const newPost = await addPost(finalPostData);
-
+      const newPost = await addPostApi(finalPostData);
       console.log("Post created successfully:", newPost);
 
-      dispatch(addPostToStore(newPost)); // 👈 naya dispatch — response redux store mein add
+      // Dispatches only once now
+      console.log(dispatch(addPost(newPost)));
 
-      // Modal band karne ke liye
       dispatch(setIsCreateModalOpen(false));
     } catch (error) {
       console.error("Failed to create post:", error);
@@ -266,7 +275,7 @@ export default function CreatePostModal() {
               </div>
             )}
 
-            {/* Tabs - Explicit Background & Contrast Fix */}
+            {/* Tabs */}
             <div
               role="tablist"
               className="mb-5 flex gap-1 p-1.5 rounded-2xl bg-slate-300 dark:bg-slate-800 overflow-x-auto border border-slate-300 dark:border-slate-700"
@@ -300,7 +309,7 @@ export default function CreatePostModal() {
                 {createModalTab === "doubt" && (
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Question Title (questionTitle)
+                      Question Title
                     </label>
                     <input
                       type="text"
@@ -318,7 +327,7 @@ export default function CreatePostModal() {
                 <div>
                   {createModalTab === "doubt" && (
                     <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Detailed Explanation (questionExplanation)
+                      Detailed Explanation
                     </label>
                   )}
                   <textarea
@@ -361,7 +370,7 @@ export default function CreatePostModal() {
                   <div className="p-3.5 rounded-2xl bg-slate-950 text-slate-100 space-y-2 border border-slate-800">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-mono font-semibold text-brand-400">
-                        Code snippet (codeDetails)
+                        Code snippet
                       </span>
                       <div className="flex items-center gap-2">
                         <select
@@ -407,7 +416,7 @@ export default function CreatePostModal() {
                 {/* Subject picker */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Subject (subject) *
+                    Subject *
                   </label>
                   <select
                     value={subject}
@@ -440,7 +449,7 @@ export default function CreatePostModal() {
                       className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center gap-1.5 text-xs font-medium cursor-pointer"
                     >
                       <ImageIcon className="w-4 h-4 text-emerald-500" />
-                      <span>Image (img)</span>
+                      <span>Image</span>
                     </button>
 
                     <button
@@ -471,7 +480,7 @@ export default function CreatePostModal() {
               <div className="space-y-4 py-1">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Resource Title / Caption (caption)
+                    Resource Title / Caption
                   </label>
                   <input
                     type="text"
@@ -486,7 +495,7 @@ export default function CreatePostModal() {
                 {/* Subject picker for resource */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Subject (subject) *
+                    Subject *
                   </label>
                   <select
                     value={subject}
