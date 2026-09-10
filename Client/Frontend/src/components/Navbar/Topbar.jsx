@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,15 +22,11 @@ import {
   selectSearchModalOpen,
   logout,
 } from "../../store/auth.slice";
-import { getNotifications } from "../../api/notification.api";
-import { useSocketContext } from "../../context/SocketContext";
 
 export default function TopNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [unreadNotifs, setUnreadNotifs] = useState(0);
-  const { socket } = useSocketContext();
 
   const { user } = useSelector((state) => state.auth);
 
@@ -39,28 +35,10 @@ export default function TopNavbar() {
   const toggleTheme = () =>
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
+  const notifications = [];
   const conversations = [];
 
-  useEffect(() => {
-    let active = true;
-    getNotifications(1, 1)
-      .then((result) => {
-        if (active) setUnreadNotifs(result.unread || 0);
-      })
-      .catch(() => {
-        if (active) setUnreadNotifs(0);
-      });
-    return () => {
-      active = false;
-    };
-  }, [user?._id]);
-
-  useEffect(() => {
-    if (!socket) return undefined;
-    const handleNotification = () => setUnreadNotifs((current) => current + 1);
-    socket.on("notification", handleNotification);
-    return () => socket.off("notification", handleNotification);
-  }, [socket]);
+  const unreadNotifs = notifications.filter((n) => !n.isRead).length;
 
   const isSearch = useSelector(selectSearchModalOpen);
 

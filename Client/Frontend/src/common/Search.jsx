@@ -22,7 +22,6 @@ import {
   selectCommunities,
   selectResources,
 } from "../store/auth.slice";
-import { searchContent } from "../api/search.api";
 
 export default function SearchModal() {
   const dispatch = useDispatch();
@@ -37,9 +36,6 @@ export default function SearchModal() {
 
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all"); // 'all' | 'students' | 'doubts' | 'posts' | 'communities' | 'resources'
-  const [remoteResults, setRemoteResults] = useState(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState("");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -50,39 +46,6 @@ export default function SearchModal() {
       setActiveFilter("all");
     }
   }, [isSearchModalOpen]);
-
-  useEffect(() => {
-    const trimmedQuery = query.trim();
-    if (trimmedQuery.length < 2) {
-      setRemoteResults(null);
-      setSearchError("");
-      return undefined;
-    }
-
-    let active = true;
-    const timer = setTimeout(async () => {
-      setIsSearching(true);
-      setSearchError("");
-      try {
-        const result = await searchContent(trimmedQuery);
-        if (active) setRemoteResults(result.data || {});
-      } catch (error) {
-        if (active) {
-          setRemoteResults(null);
-          setSearchError(
-            error.response?.data?.message || "Search is unavailable right now.",
-          );
-        }
-      } finally {
-        if (active) setIsSearching(false);
-      }
-    }, 300);
-
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [query]);
 
   const trendingSearches = [
     "Dynamic Programming",
@@ -96,61 +59,51 @@ export default function SearchModal() {
   // Filtering Logic
   const trimmed = query.trim().toLowerCase();
 
-  const filteredStudents =
-    remoteResults?.users ||
-    (trimmed
-      ? students.filter(
-          (s) =>
-            s.name?.toLowerCase().includes(trimmed) ||
-            s.username?.toLowerCase().includes(trimmed) ||
-            s.skills?.some((sk) => sk.toLowerCase().includes(trimmed)),
-        )
-      : []);
+  const filteredStudents = trimmed
+    ? students.filter(
+        (s) =>
+          s.name?.toLowerCase().includes(trimmed) ||
+          s.username?.toLowerCase().includes(trimmed) ||
+          s.skills?.some((sk) => sk.toLowerCase().includes(trimmed)),
+      )
+    : [];
 
-  const filteredDoubts =
-    remoteResults?.doubts ||
-    (trimmed
-      ? doubts.filter(
-          (d) =>
-            d.title?.toLowerCase().includes(trimmed) ||
-            d.description?.toLowerCase().includes(trimmed) ||
-            d.subject?.toLowerCase().includes(trimmed) ||
-            d.tags?.some((t) => t.toLowerCase().includes(trimmed)),
-        )
-      : []);
+  const filteredDoubts = trimmed
+    ? doubts.filter(
+        (d) =>
+          d.title?.toLowerCase().includes(trimmed) ||
+          d.description?.toLowerCase().includes(trimmed) ||
+          d.subject?.toLowerCase().includes(trimmed) ||
+          d.tags?.some((t) => t.toLowerCase().includes(trimmed)),
+      )
+    : [];
 
-  const filteredPosts =
-    remoteResults?.posts ||
-    (trimmed
-      ? posts.filter(
-          (p) =>
-            p.content?.toLowerCase().includes(trimmed) ||
-            p.subject?.toLowerCase().includes(trimmed) ||
-            p.tags?.some((t) => t.toLowerCase().includes(trimmed)),
-        )
-      : []);
+  const filteredPosts = trimmed
+    ? posts.filter(
+        (p) =>
+          p.content?.toLowerCase().includes(trimmed) ||
+          p.subject?.toLowerCase().includes(trimmed) ||
+          p.tags?.some((t) => t.toLowerCase().includes(trimmed)),
+      )
+    : [];
 
-  const filteredCommunities =
-    remoteResults?.communities ||
-    (trimmed
-      ? communities.filter(
-          (c) =>
-            c.name?.toLowerCase().includes(trimmed) ||
-            c.description?.toLowerCase().includes(trimmed) ||
-            c.tags?.some((t) => t.toLowerCase().includes(trimmed)),
-        )
-      : []);
+  const filteredCommunities = trimmed
+    ? communities.filter(
+        (c) =>
+          c.name?.toLowerCase().includes(trimmed) ||
+          c.description?.toLowerCase().includes(trimmed) ||
+          c.tags?.some((t) => t.toLowerCase().includes(trimmed)),
+      )
+    : [];
 
-  const filteredResources =
-    remoteResults?.resources ||
-    (trimmed
-      ? resources.filter(
-          (r) =>
-            r.title?.toLowerCase().includes(trimmed) ||
-            r.subject?.toLowerCase().includes(trimmed) ||
-            r.tags?.some((t) => t.toLowerCase().includes(trimmed)),
-        )
-      : []);
+  const filteredResources = trimmed
+    ? resources.filter(
+        (r) =>
+          r.title?.toLowerCase().includes(trimmed) ||
+          r.subject?.toLowerCase().includes(trimmed) ||
+          r.tags?.some((t) => t.toLowerCase().includes(trimmed)),
+      )
+    : [];
 
   const hasResults =
     filteredStudents.length > 0 ||
@@ -214,21 +167,6 @@ export default function SearchModal() {
                 </kbd>
               )}
             </div>
-
-            {query.trim().length >= 2 && (isSearching || searchError) && (
-              <div className="border-b border-slate-100 px-5 py-2.5 text-xs dark:border-surface-darkBorder">
-                {isSearching && (
-                  <span className="text-ink-faint">
-                    Searching StudySharp...
-                  </span>
-                )}
-                {!isSearching && searchError && (
-                  <span className="text-rose-600 dark:text-rose-300">
-                    {searchError}
-                  </span>
-                )}
-              </div>
-            )}
 
             {/* Filter Pills */}
             {query && (

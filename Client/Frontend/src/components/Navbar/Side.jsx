@@ -77,12 +77,6 @@ export default function Sidebar() {
       path: "/messages",
       badge: unreadMessages > 0 ? unreadMessages : null,
     },
-    {
-      label: "Notifications",
-      icon: <Bell className="w-5 h-5" />,
-      path: "/notifications",
-      badge: unreadNotifs > 0 ? unreadNotifs : null,
-    },
     { label: "Saved", icon: <Bookmark className="w-5 h-5" />, path: "/saved" },
     {
       label: "Resources",
@@ -166,7 +160,6 @@ export default function Sidebar() {
           })}
         </nav>
       </div>
-
     </aside>
   );
 }

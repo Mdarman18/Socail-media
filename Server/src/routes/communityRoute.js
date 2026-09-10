@@ -7,8 +7,6 @@ import {
   getCommunityDetails,
   getCommunityPosts,
   joinCommunity,
-  leaveCommunity,
-  setCommunityRole,
 } from "../controllers/community.js";
 import upload from "../utils/multer.js";
 
@@ -107,8 +105,6 @@ router.get("/all", auth, getAllCommunities);
  *         description: Unauthorized
  */
 router.post("/join/:id", auth, joinCommunity);
-router.post("/leave/:id", auth, leaveCommunity);
-router.patch("/:id/members/:userId/role", auth, setCommunityRole);
 
 /**
  * @swagger

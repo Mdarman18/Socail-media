@@ -46,7 +46,6 @@ export const createCommunity = async (req, res, next) => {
       tags: tags || [],
       creator: req.user._id,
       members: [req.user._id], // Creator automatic pehla member ban jayega
-      admins: [req.user._id],
     });
 
     // User ke communities array mein bhi add kar denge
@@ -127,76 +126,6 @@ export const joinCommunity = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  }
-};
-
-export const leaveCommunity = async (req, res, next) => {
-  try {
-    const community = await Community.findById(req.params.id);
-    if (!community) {
-      throw new customError("Community nahi mili!", 404);
-    }
-    if (community.creator.toString() === req.user.id.toString()) {
-      throw new customError("The community owner cannot leave", 400);
-    }
-
-    await Community.findByIdAndUpdate(community._id, {
-      $pull: {
-        members: req.user.id,
-        admins: req.user.id,
-        moderators: req.user.id,
-      },
-    });
-    await User.findByIdAndUpdate(req.user.id, {
-      $pull: { communities: community._id },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Community left successfully",
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-export const setCommunityRole = async (req, res, next) => {
-  try {
-    const { role } = req.body;
-    const { id: communityId, userId } = req.params;
-    if (!["admin", "moderator", "member"].includes(role)) {
-      throw new customError("Invalid community role", 400);
-    }
-
-    const community = await Community.findById(communityId);
-    if (!community) {
-      throw new customError("Community nahi mili!", 404);
-    }
-    const isAdmin = community.admins.some(
-      (id) => id.toString() === req.user.id.toString(),
-    );
-    if (!isAdmin) {
-      throw new customError("Only community admins can manage roles", 403);
-    }
-    if (!community.members.some((id) => id.toString() === userId.toString())) {
-      throw new customError("User is not a community member", 400);
-    }
-
-    await Community.findByIdAndUpdate(communityId, {
-      $pull: { admins: userId, moderators: userId },
-    });
-    if (role !== "member") {
-      await Community.findByIdAndUpdate(communityId, {
-        $addToSet: { [role === "admin" ? "admins" : "moderators"]: userId },
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: `Community role updated to ${role}`,
-    });
-  } catch (error) {
-    return next(error);
   }
 };
 

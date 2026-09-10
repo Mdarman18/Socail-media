@@ -3,7 +3,6 @@ import upload from "../utils/multer.js";
 import {
   addComment,
   addPost,
-  acceptAnswer,
   DeletePost,
   Dislike,
   getComment,
@@ -13,7 +12,6 @@ import {
   handleUpvote,
   Like,
   savedPost,
-  reopenDoubt,
 } from "../controllers/postController.js";
 
 export const postRoute = express.Router();
@@ -308,5 +306,3 @@ postRoute.post("/upvote/:id", handleUpvote);
  *         description: Comment downvoted successfully
  */
 postRoute.post("/downvote/:id", handleDownvote);
-postRoute.post("/doubt/:postId/answer/:commentId/accept", acceptAnswer);
-postRoute.post("/doubt/:id/reopen", reopenDoubt);

@@ -2,8 +2,6 @@ import customError from "../utils/errorHandling.js";
 import { User } from "../models/user.js";
 import cloudinary from "../utils/cloud.js";
 import getDataUri from "../utils/dataUri.js";
-import { Notification } from "../models/notification.js";
-import { io, userSockets } from "../sockets/socket.js";
 
 // ===================== GET PROFILE =====================
 export const getProfile = async (req, res, next) => {
@@ -168,17 +166,6 @@ export const followUnfollow = async (req, res, next) => {
         { new: true },
       ).select("-password"),
     ]);
-
-    const notification = await Notification.create({
-      recipient: jisKoFollowKarna,
-      actor: followKarneWala,
-      type: "follow",
-      message: `${user.username} started following you`,
-    });
-    const socketId = userSockets[jisKoFollowKarna.toString()];
-    if (socketId) {
-      io.to(socketId).emit("notification", notification);
-    }
 
     return res.status(200).json({
       success: true,

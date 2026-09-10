@@ -1,10 +1,6 @@
 import { Comment } from "../models/commentSchema.js";
 import { Post } from "../models/postSchema.js";
 import { User } from "../models/user.js";
-import { ReputationTransaction } from "../models/reputationTransaction.js";
-import { Notification } from "../models/notification.js";
-import { io, userSockets } from "../sockets/socket.js";
-import { unlockAchievement } from "../utils/achievements.js";
 import cloudinary from "../utils/cloud.js";
 import sharp from "sharp";
 import customError from "../utils/errorHandling.js";
@@ -88,10 +84,6 @@ export const addPost = async (req, res, next) => {
 
     user.post.push(post._id);
     await user.save();
-    await unlockAchievement(
-      userId,
-      status === "doubt" ? "first_doubt" : "first_post",
-    );
 
     await post.populate("author", "-password");
 
@@ -116,19 +108,19 @@ export const getUserProfile = async (req, res, next) => {
     );
     const [posts, total] = await Promise.all([
       Post.find()
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .populate({ path: "author", select: "username img" })
-        .populate({
-          path: "comment",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "author",
-            select: "username img",
-          },
-        })
-        .lean(),
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({ path: "author", select: "username img" })
+      .populate({
+        path: "comment",
+        options: { sort: { createdAt: -1 } },
+        populate: {
+          path: "author",
+          select: "username img",
+        },
+      })
+      .lean(),
       Post.countDocuments(),
     ]);
 
@@ -453,112 +445,6 @@ export const savedPost = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Post saved",
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-// ===================== ACCEPT / REOPEN DOUBT =====================
-export const acceptAnswer = async (req, res, next) => {
-  try {
-    const { postId, commentId } = req.params;
-    const userId = req.user.id;
-    const post = await Post.findOne({
-      _id: postId,
-      author: userId,
-      status: "doubt",
-    });
-
-    if (!post) {
-      throw new customError("Only the doubt author can accept an answer", 403);
-    }
-    if (post.acceptedAnswer) {
-      throw new customError("This doubt already has an accepted answer", 409);
-    }
-
-    const answer = await Comment.findOne({ _id: commentId, post: postId });
-    if (!answer) {
-      throw new customError("Answer not found for this doubt", 404);
-    }
-    if (answer.author.toString() === userId.toString()) {
-      throw new customError("You cannot accept your own answer", 400);
-    }
-
-    const updatedPost = await Post.findOneAndUpdate(
-      { _id: postId, author: userId, status: "doubt", acceptedAnswer: null },
-      {
-        $set: {
-          acceptedAnswer: answer._id,
-          solved: true,
-          solvedAt: new Date(),
-        },
-      },
-      { new: true },
-    ).populate({
-      path: "acceptedAnswer",
-      populate: { path: "author", select: "username img" },
-    });
-
-    if (!updatedPost) {
-      throw new customError("This doubt was updated already", 409);
-    }
-
-    try {
-      await ReputationTransaction.create({
-        user: answer.author,
-        amount: 25,
-        reason: "Accepted doubt answer",
-        sourceType: "accepted_answer",
-        sourceId: answer._id,
-      });
-      await User.findByIdAndUpdate(answer.author, { $inc: { reputation: 25 } });
-    } catch (error) {
-      if (error.code !== 11000) {
-        throw error;
-      }
-    }
-
-    const notification = await Notification.create({
-      recipient: answer.author,
-      actor: userId,
-      type: "accepted_answer",
-      post: post._id,
-      comment: answer._id,
-      message: "Your answer was accepted",
-    });
-    const socketId = userSockets[answer.author.toString()];
-    if (socketId) {
-      io.to(socketId).emit("notification", notification);
-    }
-    await unlockAchievement(answer.author, "first_doubt_solved");
-
-    return res.status(200).json({
-      success: true,
-      message: "Answer accepted successfully",
-      post: updatedPost,
-    });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-export const reopenDoubt = async (req, res, next) => {
-  try {
-    const post = await Post.findOneAndUpdate(
-      { _id: req.params.id, author: req.user.id, status: "doubt" },
-      { $set: { acceptedAnswer: null, solved: false, solvedAt: null } },
-      { new: true },
-    );
-
-    if (!post) {
-      throw new customError("Doubt not found or unauthorized", 404);
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Doubt reopened successfully",
-      post,
     });
   } catch (error) {
     return next(error);

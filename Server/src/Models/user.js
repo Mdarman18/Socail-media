@@ -45,10 +45,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    skills: {
-      type: [String],
-      default: [],
-    },
     img: {
       type: String,
       default: "",
@@ -100,11 +96,6 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    reputation: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
     lastActiveDate: {
       type: Date,
       default: null,
@@ -112,8 +103,5 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
-userSchema.index({ username: 1 });
-userSchema.index({ reputation: -1, createdAt: -1 });
 
 export const User = mongoose.model("User", userSchema);

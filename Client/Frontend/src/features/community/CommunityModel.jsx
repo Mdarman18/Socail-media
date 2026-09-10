@@ -31,7 +31,7 @@ export default function CreateCommunityModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
       <div className="bg-white dark:bg-[#121826] border border-slate-200/80 dark:border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 p-6 text-white relative flex-shrink-0">
+        <div className="bg-linear-to-r from-indigo-900 via-slate-900 to-indigo-950 p-6 text-white relative flex-shrink-0">
           <button
             type="button"
             onClick={onClose}

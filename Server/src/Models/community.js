@@ -50,23 +50,8 @@ const communitySchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    admins: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    moderators: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
   },
   { timestamps: true },
 );
-
-communitySchema.index({ category: 1, createdAt: -1 });
-communitySchema.index({ members: 1 });
 
 export const Community = mongoose.model("Community", communitySchema);

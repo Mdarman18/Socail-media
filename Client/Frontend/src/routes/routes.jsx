@@ -24,9 +24,6 @@ const UserProfile = lazy(() => import("../features/profile/UserProfile"));
 const Message = lazy(() => import("../features/message/Message"));
 const Demo = lazy(() => import("../pages/Home/demo"));
 const Comment = lazy(() => import("../features/post/Comment"));
-const Notifications = lazy(() => import("../pages/Notifications"));
-const Saved = lazy(() => import("../pages/Saved"));
-const Analytics = lazy(() => import("../pages/Analytics"));
 
 // Capital C rakha hai component naming rule ke mutabiq
 const Community = lazy(() => import("../features/community/Community"));
@@ -81,38 +78,6 @@ export const routes = createBrowserRouter([
               </Suspense>
             ),
           },
-          {
-            path: "notifications",
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <Notifications />
-              </Suspense>
-            ),
-          },
-          {
-            path: "saved",
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <Saved />
-              </Suspense>
-            ),
-          },
-          {
-            path: "analytics",
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <Analytics />
-              </Suspense>
-            ),
-          },
-          {
-            path: "tracker",
-            element: (
-              <Suspense fallback={<PageLoader />}>
-                <Analytics />
-              </Suspense>
-            ),
-          },
           // Naya Community Route add kar diya gaya hai
           {
             path: "communities",
@@ -122,7 +87,6 @@ export const routes = createBrowserRouter([
               </Suspense>
             ),
           },
-
           {
             path: "demo",
             element: (

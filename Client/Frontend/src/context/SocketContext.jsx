@@ -18,15 +18,19 @@ export const SocketContextProvider = ({ children }) => {
     let socketInstance = null;
 
     if (user?._id) {
-      const socketUrl =
-        import.meta.env.VITE_SOCKET_URL ||
-        import.meta.env.VITE_API_BASE_URL ||
-        "http://localhost:4400";
-
-      socketInstance = io(socketUrl, {
-        withCredentials: true,
+      socketInstance = io("https://socail-media-4.onrender.com", {
+        query: {
+          userId: user._id,
+        },
         transports: ["websocket"],
       });
+      // if (user?._id) {
+      //   socketInstance = io("http://localhost:4400", {
+      //     query: {
+      //       userId: user._id,
+      //     },
+      //     transports: ["websocket"],
+      //   });
 
       setSocket(socketInstance);
 
