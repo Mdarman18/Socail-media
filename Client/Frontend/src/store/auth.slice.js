@@ -118,6 +118,17 @@ export const postSlice = createSlice({
         state.userPosts[index] = updatedPost;
       }
     },
+    // 👇 NEW: append a comment to the matching post so the comment-count
+    // badge in PostSection updates immediately, without waiting for a refetch.
+    addCommentToPost: (state, action) => {
+      const { postId, comment } = action.payload;
+
+      const post = state.userPosts.find((p) => p._id === postId);
+      if (post) {
+        if (!Array.isArray(post.comment)) post.comment = [];
+        post.comment.push(comment);
+      }
+    },
     deletePost: (state, action) => {
       state.userPosts = state.userPosts.filter(
         (post) => post._id !== action.payload,
@@ -126,7 +137,13 @@ export const postSlice = createSlice({
   },
 });
 
-export const { setPosts, addPost, deletePost, likePost } = postSlice.actions;
+export const {
+  setPosts,
+  addPost,
+  deletePost,
+  likePost,
+  addCommentToPost, // 👈 NEW export
+} = postSlice.actions;
 export const postReducer = postSlice.reducer;
 
 // Profile State & Slice

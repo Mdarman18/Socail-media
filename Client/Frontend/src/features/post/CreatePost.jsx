@@ -1,149 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX, FiImage, FiFileText } from "react-icons/fi";
-import toast from "react-hot-toast";
-import { postUrl } from "../../api/Axios";
-import { useDispatch } from "react-redux";
-import { addPost, loginSuccess } from "../../store/auth.slice";
-
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
-const ALLOWED_PDF_TYPES = ["application/pdf"];
-
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+import { useCreatePostLogic } from "../../Hooks/useCreatePostLogic";
 
 const CreatePost = ({ isOpen, setIsopen }) => {
-  const dispatch = useDispatch();
-
-  const [caption, setCaption] = useState("");
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [fileType, setFileType] = useState(null);
-
-  // Loading state
-  const [loading, setLoading] = useState(false);
-
-  // ==============================
-  // Handle File Selection
-  // ==============================
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0];
-
-    if (!selected) {
-      toast.error("Please select a file");
-      return;
-    }
-
-    // File size validation
-    if (selected.size > MAX_SIZE) {
-      toast.error("File should not be bigger than 10 MB");
-      return;
-    }
-
-    // Image
-    if (ALLOWED_IMAGE_TYPES.includes(selected.type)) {
-      setFileType("image");
-      setPreview(URL.createObjectURL(selected));
-      setFile(selected);
-    }
-
-    // PDF
-    else if (ALLOWED_PDF_TYPES.includes(selected.type)) {
-      setFileType("pdf");
-      setPreview(null);
-      setFile(selected);
-    }
-
-    // Invalid file
-    else {
-      toast.error("Only JPG, PNG, WEBP or PDF files are allowed");
-    }
-  };
-
-  // ==============================
-  // Remove Selected File
-  // ==============================
-  const removeFile = () => {
-    if (preview) {
-      URL.revokeObjectURL(preview);
-    }
-
-    setFile(null);
-    setPreview(null);
-    setFileType(null);
-  };
-
-  // ==============================
-  // Submit Post
-  // ==============================
-  const handleSubmit = async () => {
-    // Prevent request if file doesn't exist
-    if (!file) {
-      toast.error("Please select at least one file");
-      return;
-    }
-
-    // Prevent duplicate request
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const formData = new FormData();
-
-      formData.append("img", file);
-      formData.append("caption", caption);
-
-      const res = await postUrl.post("/addpost", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Success message
-      toast.success(res.data.message || "Post created successfully");
-
-      // Clear form
-      setFile(null);
-      setPreview(null);
-      setFileType(null);
-      setCaption("");
-
-      // Update Redux
-      dispatch(addPost(res.data.post));
-      dispatch(loginSuccess(res.data.user));
-
-      // Close modal
-      setIsopen(false);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-    } finally {
-      // Whether success or error
-      setLoading(false);
-    }
-  };
-
-  // ==============================
-  // Close Modal
-  // ==============================
-  const handleClose = () => {
-    // Don't allow closing while request is running
-    if (loading) {
-      return;
-    }
-
-    setIsopen(false);
-  };
+  const {
+    caption,
+    setCaption,
+    file,
+    preview,
+    fileType,
+    loading,
+    handleFileChange,
+    removeFile,
+    handleSubmit,
+    handleClose,
+  } = useCreatePostLogic(isOpen, setIsopen);
 
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      {/* ==============================
-          Overlay
-      ============================== */}
+      {/* Overlay */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -151,9 +29,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         onClick={handleClose}
       >
-        {/* ==============================
-            Modal
-        ============================== */}
+        {/* Modal */}
         <motion.div
           initial={{
             scale: 0.9,
@@ -174,9 +50,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
           onClick={(e) => e.stopPropagation()}
           className="relative z-60 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl dark:bg-gray-900"
         >
-          {/* ==============================
-              Header
-          ============================== */}
+          {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white/90 px-5 py-4 backdrop-blur dark:border-gray-700 dark:bg-gray-900/90">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
               Create Post
@@ -191,9 +65,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
             </button>
           </div>
 
-          {/* ==============================
-              Body
-          ============================== */}
+          {/* Body */}
           <div className="space-y-4 px-5 py-5">
             {/* Caption */}
             <div>
@@ -211,9 +83,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
               />
             </div>
 
-            {/* ==============================
-                File Upload
-            ============================== */}
+            {/* File Upload */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-600 dark:text-gray-300">
                 Media
@@ -277,9 +147,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
             </div>
           </div>
 
-          {/* ==============================
-              Footer
-          ============================== */}
+          {/* Footer */}
           <div className="sticky bottom-0 flex justify-end gap-3 border-t border-gray-200 bg-white/90 px-5 py-4 backdrop-blur dark:border-gray-700 dark:bg-gray-900/90">
             {/* Cancel */}
             <button
@@ -290,9 +158,7 @@ const CreatePost = ({ isOpen, setIsopen }) => {
               Cancel
             </button>
 
-            {/* ==============================
-                Post Button
-            ============================== */}
+            {/* Post Button */}
             <button
               onClick={handleSubmit}
               disabled={loading}
@@ -300,7 +166,6 @@ const CreatePost = ({ isOpen, setIsopen }) => {
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  {/* Spinner */}
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   Posting...
                 </span>

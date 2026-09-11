@@ -41,7 +41,6 @@ const postSchema = new mongoose.Schema(
     },
     codeType: {
       type: String,
-      enum: ["Java", "Python", "JavaScript", "sql"],
       required: false,
     },
     caption: {
