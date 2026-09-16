@@ -31,3 +31,8 @@ export const verifyMe = axios.create({
   baseURL: `${API_URL}`,
   withCredentials: true,
 });
+
+export const studyUrl = axios.create({
+  baseURL: `${API_URL}/api/study`,
+  withCredentials: true,
+});

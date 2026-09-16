@@ -7,7 +7,7 @@ import {
   getAllCommunitiesService,
 } from "../../api/community.api";
 import CreateCommunityModal from "./CommunityModel";
-import { setCommunities } from "../../store/auth.slice";
+import { setCommunities, addCommunity } from "../../store/auth.slice";
 import CommunityCard from "./CommunityCard";
 
 export default function Community() {

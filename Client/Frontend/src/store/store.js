@@ -13,6 +13,7 @@ import storageModule from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
 import { messageReducer } from "./message.slice";
+import { studyReducer } from "./study.slice";
 
 const storage = storageModule.default || storageModule;
 
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   comment: commentReducer,
   community: communityReducer,
   studysharp: studySharpReducer,
+  study: studyReducer,
 });
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);

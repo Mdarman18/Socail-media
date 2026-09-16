@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
     let socketInstance = null;
 
     if (user?._id) {
-      socketInstance = io("https://socail-media-4.onrender.com", {
+      socketInstance = io("http://localhost:4400", {
         query: {
           userId: user._id,
         },

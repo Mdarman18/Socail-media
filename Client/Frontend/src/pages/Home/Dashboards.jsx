@@ -3,7 +3,6 @@ import { Flame, Clock, Target, Play, Sparkles, HelpCircle } from "lucide-react";
 import { useAcademicDashboard } from "../../Hooks/useAcademicDashboard";
 
 export default function AcademicDashboard({
-  user,
   onStartSession,
   onAskDoubt,
 }) {
@@ -14,7 +13,10 @@ export default function AcademicDashboard({
     firstName,
     remainingHours,
     isGoalCompleted,
-  } = useAcademicDashboard({ user });
+    streak,
+    longestStreak,
+    studiedMinutes,
+  } = useAcademicDashboard();
 
   return (
     <section className="bg-linear-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl relative overflow-hidden">
@@ -65,10 +67,10 @@ export default function AcademicDashboard({
             <span className="truncate">Study Streak</span>
           </div>
           <p className="text-lg sm:text-xl md:text-2xl font-bold">
-            {user.stats.streak} Days
+            {streak} Days
           </p>
           <p className="text-[10px] sm:text-[11px] text-slate-300">
-            Longest: {user.stats.longestStreak} days
+            Longest: {longestStreak} days
           </p>
         </div>
 
@@ -96,7 +98,7 @@ export default function AcademicDashboard({
             {completedHours}h
           </p>
           <p className="text-[10px] sm:text-[11px] text-slate-300">
-            {user.stats.todayCompletedMinutes} minutes logged
+            {studiedMinutes} minutes logged
           </p>
         </div>
 

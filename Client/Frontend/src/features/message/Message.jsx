@@ -142,6 +142,7 @@ const BasicOnlineCount = () => {
       const res = await profileUrl.get("/getSuggestion");
       setUsers(res.data.users || []);
     } catch (error) {
+      console.error("Get user suggestions error:", error?.response?.data || error.message);
     } finally {
       setLoadingUsers(false);
     }

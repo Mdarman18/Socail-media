@@ -8,8 +8,6 @@ const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_PDF_TYPES = ["application/pdf"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
-const CODE_TYPES = ["Java", "Python", "JavaScript", "sql"];
-
 export const validateCodeType = (value) => {
   const trimmed = value?.trim() ?? "";
   if (trimmed === "") return { valid: true }; // empty is allowed

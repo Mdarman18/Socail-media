@@ -67,6 +67,7 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
             disabled={loading} // Loading ke waqt input disable rahega
+            required
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
           />
           <FaUser className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
@@ -81,6 +82,7 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
             disabled={loading} // Loading ke waqt input disable rahega
+            required
             className="w-full bg-gray-100 rounded-md py-2.5 pl-4 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
           />
           <span

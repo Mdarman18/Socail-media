@@ -37,6 +37,15 @@ const AppLanding = lazy(() => import("../pages/landingPage/App"));
 const About = lazy(() => import("../pages/landingPage/components/About"));
 const AuthPage = lazy(() => import("../pages/AuthPage/Auth"));
 
+// --- Study Tracker Pages ---
+const StudyLayout = lazy(() => import("../features/StudyTracker/StudyLayout"));
+const Dashboard = lazy(() => import("../features/StudyTracker/Dashboard"));
+const PomodoroTimer = lazy(() => import("../features/StudyTracker/PomodoroTimer"));
+const SessionsList = lazy(() => import("../features/StudyTracker/SessionsList"));
+const GoalsCalendar = lazy(() => import("../features/StudyTracker/GoalsCalendar"));
+const TasksBoard = lazy(() => import("../features/StudyTracker/TasksBoard"));
+const StudySettings = lazy(() => import("../features/StudyTracker/StudySettings"));
+
 export const routes = createBrowserRouter([
   // 1. Protected Routes (Login ke baad wale pages)
   {
@@ -102,6 +111,65 @@ export const routes = createBrowserRouter([
                 <CommunityDetails />
               </Suspense>
             ),
+          },
+          // Study Tracker Routes
+          {
+            path: "study",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <StudyLayout />
+              </Suspense>
+            ),
+            children: [
+              {
+                index: true,
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <Dashboard />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "timer",
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <PomodoroTimer />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "sessions",
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <SessionsList />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "goals",
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <GoalsCalendar />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "tasks",
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <TasksBoard />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "settings",
+                element: (
+                  <Suspense fallback={<PageLoader />}>
+                    <StudySettings />
+                  </Suspense>
+                ),
+              },
+            ],
           },
         ],
       },

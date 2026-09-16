@@ -13,6 +13,7 @@ export default function EditProfile({ edit, setEdit }) {
   const [image, setImage] = useState(null);
 
   const [imagePreview, setImagePreview] = useState(user?.img || "");
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     nickname: user?.nickname || "",
@@ -65,13 +66,18 @@ export default function EditProfile({ edit, setEdit }) {
     if (image) {
       data.append("img", image);
     }
+    setLoading(true);
     try {
       const res = await profileUrl.post("/edit", data);
       toast.success(res.data.message);
       dispatch(loginSuccess(res.data.user));
 
       setEdit(false);
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
   };
   // 14 Important Places List
   const places = [
@@ -269,9 +275,12 @@ export default function EditProfile({ edit, setEdit }) {
 
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 active:scale-95 transition-all shadow-sm"
+              disabled={loading}
+              className={`w-full sm:w-auto px-6 py-2.5 rounded-xl text-white text-sm font-medium transition-all shadow-sm ${
+                loading ? "bg-violet-400 cursor-not-allowed" : "bg-violet-600 hover:bg-violet-700 active:scale-95"
+              }`}
             >
-              Save Changes
+              {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

@@ -69,7 +69,7 @@ export default function Sidebar() {
     {
       label: "Study Tracker",
       icon: <Clock className="w-5 h-5" />,
-      path: "/tracker",
+      path: "/study",
     },
     {
       label: "Messages",

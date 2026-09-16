@@ -56,12 +56,13 @@ const Suggest = () => {
           ))
         ) : visibleUsers.length > 0 ? (
           visibleUsers.map((u) => (
-            <div key={u.id} className="flex items-center gap-3">
+            <div key={u._id || u.id || Math.random()} className="flex items-center gap-3">
               {/* Profile Image */}
               <img
-                src={u.img}
+                src={u.img || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces'}
                 alt={u.name}
                 className="h-11 w-11 cursor-pointer rounded-full object-cover"
+                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces'; }}
               />
 
               {/* User Info */}

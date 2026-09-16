@@ -16,6 +16,7 @@ import auth from "./src/utils/verifyUser.js";
 import { specs } from "./src/config/swagger.js";
 import { app } from "./src/sockets/socket.js";
 import router from "./src/routes/communityRoute.js";
+import studyRouter from "./src/routes/studyRoute.js";
 
 // IMPORTANT FOR CLOUD HOSTING (Render/Vercel)
 app.set("trust proxy", 1);
@@ -86,6 +87,7 @@ app.use("/api/profile", auth, otherRouter);
 app.use("/api/post", auth, postRoute);
 app.use("/api/message", auth, messageRoute);
 app.use("/api/community", router);
+app.use("/api/study", studyRouter);
 app.get("/me", auth, (req, res) => {
   res.status(200).json({
     success: true,
@@ -94,10 +96,30 @@ app.get("/me", auth, (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
+  let statusCode = err.statusCode || 500;
+  let message = err.message || "Internal Server Error";
+
+  // Mongoose duplicate key error
+  if (err.code === 11000) {
+    statusCode = 400;
+    message = `Duplicate field value entered: ${Object.keys(err.keyValue).join(", ")}`;
+  }
+
+  // Mongoose CastError (invalid ObjectId)
+  if (err.name === "CastError") {
+    statusCode = 400;
+    message = `Invalid ${err.path}: ${err.value}`;
+  }
+
+  // Mongoose ValidationError
+  if (err.name === "ValidationError") {
+    statusCode = 400;
+    message = Object.values(err.errors).map((val) => val.message).join(", ");
+  }
+
   res.status(statusCode).json({
     success: false,
-    message: err.message || "Internal Server Error",
+    message,
   });
 });
 

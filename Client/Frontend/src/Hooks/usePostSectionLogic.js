@@ -16,7 +16,6 @@ export function usePostSectionLogic() {
   // Redux State
   const userPosts = useSelector((state) => state.post?.userPosts) || [];
   const user = useSelector((state) => state.auth.user);
-  console.log(userPosts[0]?.comment);
   // Local States
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
