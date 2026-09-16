@@ -13,12 +13,12 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-
+  const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4400";
   useEffect(() => {
     let socketInstance = null;
 
     if (user?._id) {
-      socketInstance = io("http://localhost:4400", {
+      socketInstance = io(`${API_URL}`, {
         query: {
           userId: user._id,
         },
